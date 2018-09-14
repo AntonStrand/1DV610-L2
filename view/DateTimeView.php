@@ -1,12 +1,20 @@
 <?php
 
-class DateTimeView {
+class DateTimeView
+{
 
+    public function show()
+    {
+        date_default_timezone_set("Europe/Stockholm");
 
-	public function show() {
+        $weekday = date('l');
+        $dayOfMonth = date('jS');
+        $month = date('F');
+        $year = date('Y');
+        $timeOfDay = date("H:i:s");
 
-		$timeString = 'TODO, Write servertime here...';
+        $timeString = $weekday . ', the ' . $dayOfMonth . ' of ' . $month . ' ' . $year . ', The time is ' . $timeOfDay;
 
-		return '<p>' . $timeString . '</p>';
-	}
+        return '<p>' . $timeString . '</p>';
+    }
 }
