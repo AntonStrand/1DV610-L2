@@ -43,6 +43,16 @@ class Password
     }
 
     /**
+     * Get password
+     *
+     * @return string
+     */
+    public function getPassword(): string
+    {
+        return $this->password;
+    }
+
+    /**
      * Remove eventual tags and whitespece.
      *
      * @param string $password

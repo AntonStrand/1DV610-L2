@@ -43,6 +43,16 @@ class Username
     }
 
     /**
+     * The username
+     *
+     * @return string
+     */
+    public function getUsername(): string
+    {
+        return $this->username;
+    }
+
+    /**
      * Remove eventual tags and whitespece.
      *
      * @param string $username
