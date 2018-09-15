@@ -4,6 +4,7 @@
 require_once 'model/Username.php';
 require_once 'model/Password.php';
 require_once 'model/Database.php';
+require_once 'model/Session.php';
 
 // Views
 require_once 'view/LoginView.php';
