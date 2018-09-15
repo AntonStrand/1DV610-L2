@@ -50,6 +50,11 @@ class LoginView
         }
     }
 
+    public function shouldLogout(): bool
+    {
+        return isset($_POST[self::$logout]);
+    }
+
     /**
      * Create HTTP response
      *
@@ -59,10 +64,21 @@ class LoginView
      */
     public function response()
     {
-        $message = $this->isLoginClicked() ? $message = $this->getFormErrors() : '';
+        $isLoggedIn = \Session::getVariable(\Session::IS_LOGGED_IN) || false;
 
-        $response = $this->generateLoginFormHTML($message);
-        //$response .= $this->generateLogoutButtonHTML($message);
+        if ($this->loginFailed()) {
+            $message = 'Wrong name or password';
+        } else if ($this->isLoginClicked()) {
+            $errors = $this->getFormErrors();
+            $message = empty($errors) ? 'Welcome' : $errors;
+        } else {
+            $message = '';
+        }
+
+        $response = $isLoggedIn
+        ? $this->generateLogoutButtonHTML($message)
+        : $this->generateLoginFormHTML($message);
+        // $response .= $this->generateLogoutButtonHTML($message);
         return $response;
     }
 
@@ -162,6 +178,17 @@ class LoginView
         } catch (\Exception $e) {
             return $e->getMessage();
         }
+    }
+
+    /**
+     * If the submit button is clicked and there is no form errors the user info is incorrect.
+     *
+     * @return boolean
+     */
+    private function loginFailed(): bool
+    {
+        $isLoggedIn = \Session::getVariable(\Session::IS_LOGGED_IN) || false;
+        return ($this->isLoginClicked() && $isLoggedIn === false && strlen($this->getFormErrors()) === 0);
     }
 
 }
