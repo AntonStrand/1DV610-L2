@@ -3,6 +3,7 @@
 // Models
 require_once 'model/Username.php';
 require_once 'model/Password.php';
+require_once 'model/Database.php';
 
 // Views
 require_once 'view/LoginView.php';

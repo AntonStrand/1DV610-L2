@@ -39,7 +39,7 @@ class Password
             throw new \Exception("Password has too few characters, at least " . self::MIN_LENGTH . " characters.");
         }
 
-        $this->password = password_hash($password, PASSWORD_BCRYPT);
+        $this->password = $password;
     }
 
     /**
