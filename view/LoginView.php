@@ -59,11 +59,7 @@ class LoginView
      */
     public function response()
     {
-        $message = '';
-
-        if ($this->isLoginClicked()) {
-            $message = $this->getFormErrors();
-        }
+        $message = $this->isLoginClicked() ? $message = $this->getFormErrors() : '';
 
         $response = $this->generateLoginFormHTML($message);
         //$response .= $this->generateLogoutButtonHTML($message);
