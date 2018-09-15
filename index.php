@@ -18,5 +18,6 @@ require_once './controller/Router.php';
 error_reporting(E_ALL);
 ini_set('display_errors', 'On');
 
+// TODO: Wrap in a try catch before going live.
 $router = new \Controller\Router();
 $router->route();
