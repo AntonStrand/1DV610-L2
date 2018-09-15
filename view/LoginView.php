@@ -25,12 +25,9 @@ class LoginView
      */
     public function getFormData(): array
     {
-        $username = new \Model\Username($this->getRequestUserName());
-        $password = new \Model\Password($this->getRequestPassword());
-
         return array(
-            "username" => $username,
-            "password" => $password,
+            "username" => new \Model\Username($this->getRequestUserName()),
+            "password" => new \Model\Password($this->getRequestPassword()),
             "keepLoggedIn" => $this->keepLoggedIn(),
         );
     }
