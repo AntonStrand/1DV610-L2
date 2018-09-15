@@ -61,18 +61,9 @@ class LoginView
     {
         $message = '';
 
-        // TODO: Create a seperate method
-        // Checks if the provided information is valid.
         if ($this->isLoginClicked()) {
-            try {
-                $this->getFormData();
-                // $username = new \Model\Username($this->getRequestUserName());
-                // $password = new \Model\Password($this->getRequestPassword());
-            } catch (\Exception $e) {
-                $message = $e->getMessage();
-            }
+            $message = $this->getFormErrors();
         }
-        // TODO: ENDS
 
         $response = $this->generateLoginFormHTML($message);
         //$response .= $this->generateLogoutButtonHTML($message);
@@ -160,6 +151,21 @@ class LoginView
     private function isLoginClicked(): bool
     {
         return isset($_POST[self::$login]);
+    }
+
+    /**
+     * Either validation error as string or an empty string if there was no errors.
+     *
+     * @return string Either error as string or an empty string if there was no errors.
+     */
+    private function getFormErrors(): string
+    {
+        try {
+            $this->getFormData();
+            return '';
+        } catch (\Exception $e) {
+            return $e->getMessage();
+        }
     }
 
 }
