@@ -29,8 +29,6 @@ class Password
      */
     public function setPassword(string $password)
     {
-        $password = $this->clean($password);
-
         if ($this->isEmpty($password)) {
             throw new \Exception("Password is missing");
         }
@@ -50,17 +48,6 @@ class Password
     public function getPassword(): string
     {
         return $this->password;
-    }
-
-    /**
-     * Remove eventual tags and whitespece.
-     *
-     * @param string $password
-     * @return string
-     */
-    private function clean(string $password): string
-    {
-        return trim(strip_tags($password));
     }
 
     /**

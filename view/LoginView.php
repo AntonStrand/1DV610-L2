@@ -17,19 +17,15 @@ class LoginView
      * Get validated data from form
      *
      * @throws Exception if any data is invalid
-     * @return array (
-     *  "username"     :: \Model\Username,
-     *  "password      :: \Model\Password,
-     *  "keepLoggedIn" :: Boolean
-     * )
+     * @return \Model\UserCredentials
      */
     public function getFormData(): array
     {
-        return array(
-            "username" => new \Model\Username($this->getRequestUserName()),
-            "password" => new \Model\Password($this->getRequestPassword()),
-            "keepLoggedIn" => $this->keepLoggedIn(),
-        );
+        $username = $this->getRequestUserName();
+        $password = $this->getRequestPassword();
+        $keepLoggedIn = $this->keepLoggedIn();
+
+        return new \Model\UserCredentials($username, $password, $keepLoggedIn);
     }
 
     /**
@@ -71,6 +67,8 @@ class LoginView
         } else if ($this->isLoginClicked()) {
             $errors = $this->getFormErrors();
             $message = empty($errors) ? 'Welcome' : $errors;
+        } else if ($this->shouldLogout()) {
+            $message = 'Bye bye!';
         } else {
             $message = '';
         }
@@ -125,6 +123,11 @@ class LoginView
 		';
     }
 
+    private function cleanInput($input): string
+    {
+        return trim(strip_tags($input));
+    }
+
     /**
      * Get the user name from the form
      *
@@ -132,7 +135,7 @@ class LoginView
      */
     private function getRequestUserName(): string
     {
-        return isset($_POST[self::$name]) ? $_POST[self::$name] : '';
+        return isset($_POST[self::$name]) ? cleanInput($_POST[self::$name]) : '';
     }
 
     /**
@@ -142,7 +145,7 @@ class LoginView
      */
     private function getRequestPassword(): string
     {
-        return isset($_POST[self::$password]) ? $_POST[self::$password] : '';
+        return isset($_POST[self::$password]) ? cleanInput($_POST[self::$password]) : '';
     }
 
     /**
@@ -188,7 +191,7 @@ class LoginView
     private function loginFailed(): bool
     {
         $isLoggedIn = \Session::getVariable(\Session::IS_LOGGED_IN) || false;
-        return ($this->isLoginClicked() && $isLoggedIn === false && strlen($this->getFormErrors()) === 0);
+        return ($this->isLoginClicked() && !$isLoggedIn && strlen($this->getFormErrors()) === 0);
     }
 
 }

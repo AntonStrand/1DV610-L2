@@ -29,8 +29,6 @@ class Username
      */
     public function setUsername(string $username): void
     {
-        $username = $this->clean($username);
-
         if ($this->isEmpty($username)) {
             throw new \Exception("Username is missing");
         }
@@ -50,17 +48,6 @@ class Username
     public function getUsername(): string
     {
         return $this->username;
-    }
-
-    /**
-     * Remove eventual tags and whitespece.
-     *
-     * @param string $username
-     * @return string
-     */
-    private function clean(string $username): string
-    {
-        return trim(strip_tags($username));
     }
 
     /**
