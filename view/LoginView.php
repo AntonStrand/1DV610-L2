@@ -2,6 +2,9 @@
 
 namespace view;
 
+use \Exception;
+use \model\UserCredentials;
+
 class LoginView
 {
     private static $login = 'LoginView::Login';
@@ -13,6 +16,16 @@ class LoginView
     private static $keep = 'LoginView::KeepMeLoggedIn';
     private static $messageId = 'LoginView::Message';
 
+    public function shouldLogin(): bool
+    {
+        return $this->hasClickedLogin() && $this->isInputValid();
+    }
+
+    public function getUserCredentials(): UserCredentials
+    {
+        return $this->createUserCredetials();
+    }
+
     /**
      * Create HTTP response
      *
@@ -23,6 +36,10 @@ class LoginView
     public function response()
     {
         $message = '';
+
+        if ($this->hasClickedLogin()) {
+            $message .= $this->getFormError();
+        }
 
         $response = $this->generateLoginFormHTML($message);
         //$response .= $this->generateLogoutButtonHTML($message);
@@ -69,10 +86,62 @@ class LoginView
 		';
     }
 
-    //CREATE GET-FUNCTIONS TO FETCH REQUEST VARIABLES
-    private function getRequestUserName()
+    private function getFormError(): string
     {
-        //RETURN REQUEST VARIABLE: USERNAME
+        try {
+            $this->createUserCredetials();
+            return '';
+        } catch (Exception $e) {
+            return $e->getMessage();
+        }
     }
 
+    private function isInputValid(): bool
+    {
+        try {
+            $this->createUserCredetials();
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    private function createUserCredetials(): UserCredentials
+    {
+        $username = $this->getCleanedRequestUsername();
+        $password = $this->getCleanedRequestPassword();
+        $keepLoggedIn = $this->keepLoggedIn();
+
+        return new UserCredentials($username, $password, $keepLoggedIn);
+    }
+
+    private function cleanInput(string $input): string
+    {
+        return trim(strip_tags($input));
+    }
+
+    ### LOCAL GETTERS ###
+    private function getCleanedRequestUsername(): string
+    {
+        return isset($_POST[self::$name])
+        ? $this->cleanInput($_POST[self::$name])
+        : '';
+    }
+
+    private function getCleanedRequestPassword(): string
+    {
+        return isset($_POST[self::$password])
+        ? $this->cleanInput($_POST[self::$password])
+        : '';
+    }
+
+    private function keepLoggedIn(): bool
+    {
+        return isset($_POST[self::$keep]);
+    }
+
+    private function hasClickedLogin(): bool
+    {
+        return isset($_POST[self::$login]);
+    }
 }
