@@ -32,7 +32,7 @@ class Username
             throw new \Exception("Username is missing");
         }
         if ($this->isTooShort($username)) {
-            throw new \Exception("Username has too few characters, at least " . self::MIN_LENGTH . " characters.");
+            throw new \LengthException("Username has too few characters, at least " . self::MIN_LENGTH . " characters.");
         }
         $this->username = $username;
     }
