@@ -28,7 +28,7 @@ class Username
      */
     public function setUsername(string $username): void
     {
-        if ($this->isEmpty($username)) {
+        if (empty($username)) {
             throw new \Exception("Username is missing");
         }
         if ($this->isTooShort($username)) {
@@ -45,17 +45,6 @@ class Username
     public function getUsername(): string
     {
         return $this->username;
-    }
-
-    /**
-     * Checks if the username is empty
-     *
-     * @param string $username
-     * @return boolean
-     */
-    private function isEmpty(string $username): bool
-    {
-        return empty($username);
     }
 
     /**
