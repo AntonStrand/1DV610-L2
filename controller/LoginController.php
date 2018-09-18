@@ -14,6 +14,9 @@ class LoginController
 
     private function handleLogin(): void
     {
-        echo $this->view->shouldLogin();
+        if ($this->view->shouldLogin()) {
+            $userCredentials = $this->view->getUserCredentials();
+            print_r($userCredentials);
+        }
     }
 }
