@@ -1,6 +1,6 @@
 <?php
 
-namespace View;
+namespace view;
 
 class LayoutView
 {

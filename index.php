@@ -1,25 +1,15 @@
 <?php
 
-// Models
-require_once 'model/Username.php';
-require_once 'model/Password.php';
-require_once 'model/Database.php';
-require_once 'model/Session.php';
-require_once 'model/UserCredentials.php';
-
-// Views
+//INCLUDE THE FILES NEEDED...
 require_once 'view/LoginView.php';
 require_once 'view/DateTimeView.php';
 require_once 'view/LayoutView.php';
 
-// Controllers
-require_once 'controller/LoginController.php';
-require_once './controller/Router.php';
-
 //MAKE SURE ERRORS ARE SHOWN... MIGHT WANT TO TURN THIS OFF ON A PUBLIC SERVER
 error_reporting(E_ALL);
 ini_set('display_errors', 'On');
-
-// TODO: Wrap in a try catch before going live.
-$router = new \Controller\Router();
-$router->route();
+//CREATE OBJECTS OF THE VIEWS
+$v = new \view\LoginView();
+$dtv = new \view\DateTimeView();
+$lv = new \view\LayoutView();
+$lv->render(false, $v, $dtv);
