@@ -45,12 +45,12 @@ class SessionState
 
     public function isFirstLogin(): bool
     {
-        return $this->reloadCounter === 1;
+        return $this->isAuthenticated() && $this->reloadCounter === 1;
     }
 
     public function isFirstLogout(): bool
     {
-        return $this->reloadCounter === 0;
+        return !$this->isAuthenticated() && $this->reloadCounter === 0;
     }
 
 }

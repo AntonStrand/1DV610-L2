@@ -48,19 +48,7 @@ class LoginView
      */
     public function response()
     {
-        $message = '';
-
-        if ($this->loginFailed()) {
-            $message = 'Wrong name or password';
-        } else if ($this->state->isAuthenticated()) {
-            $message = $this->state->isFirstLogin() ? 'Welcome' : '';
-        } else if ($this->shouldLogout()) {
-            $message = $this->state->isFirstLogout() ? 'Bye bye!' : '';
-        } else if ($this->hasClickedLogin()) {
-            $message = $this->getFormError();
-        } else {
-            $message = '';
-        }
+        $message = $this->getFormMessage();
 
         if ($this->state->isAuthenticated()) {
             $response = $this->generateLogoutButtonHTML($message);
@@ -109,6 +97,27 @@ class LoginView
 				</fieldset>
 			</form>
 		';
+    }
+
+    private function getFormMessage(): string
+    {
+        if ($this->loginFailed()) {
+            $message = 'Wrong name or password';
+
+        } else if ($this->state->isFirstLogin()) {
+            $message = 'Welcome';
+
+        } else if ($this->state->isFirstLogout()) {
+            $message = 'Bye bye!';
+
+        } else if ($this->hasClickedLogin()) {
+            $message = $this->getFormError();
+
+        } else {
+            $message = '';
+        }
+
+        return $message;
     }
 
     private function getFormError(): string
