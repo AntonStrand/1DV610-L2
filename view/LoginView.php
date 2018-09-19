@@ -17,11 +17,11 @@ class LoginView
     private static $keep = 'LoginView::KeepMeLoggedIn';
     private static $messageId = 'LoginView::Message';
 
-    private $user;
+    private $state;
 
-    public function __construct(SessionState $user)
+    public function __construct(SessionState $state)
     {
-        $this->user = $user;
+        $this->state = $state;
     }
 
     public function shouldLogin(): bool
@@ -50,16 +50,31 @@ class LoginView
     {
         $message = '';
 
-        if ($this->hasClickedLogin()) {
-            $error = $this->getFormError();
-            $message = $error;
-            if (strlen($error) == 0 && !$this->user->isAuthenticated()) {
-                $message = "Wrong name or password";
-            }
+        if ($this->loginFailed()) {
+            $message = 'Wrong name or password';
+        } else if ($this->state->isAuthenticated()) {
+            $message = $this->state->isFirstLogin() ? 'Welcome' : '';
+        } else if ($this->shouldLogout()) {
+            $message = 'Bye bye!';
+        } else if ($this->hasClickedLogin()) {
+            $message = $this->getFormError();
+        } else {
+            $message = '';
         }
 
-        if ($this->user->isAuthenticated()) {
-            $message = 'Welcome';
+        // if ($this->hasClickedLogin()) {
+        //     $error = $this->getFormError();
+        //     $message = $error;
+        //     if (strlen($error) == 0 && !$this->state->isAuthenticated()) {
+        //         $message = "Wrong name or password";
+        //     }
+        // }
+
+        // if ($this->hasClickedLogout()) {
+        //     $message = 'Bye bye';
+        // }
+
+        if ($this->state->isAuthenticated()) {
             $response = $this->generateLogoutButtonHTML($message);
         } else {
             $response = $this->generateLoginFormHTML($message);
@@ -174,7 +189,12 @@ class LoginView
 
     private function getUsername(): string
     {
-        $username = $this->user->getUsername();
+        $username = $this->state->getUsername();
         return $username !== '' ? $username : $this->getCleanedRequestUsername();
+    }
+
+    private function loginFailed(): bool
+    {
+        return strlen($this->getFormError()) == 0 && !$this->state->isAuthenticated();
     }
 }

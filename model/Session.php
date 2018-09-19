@@ -6,6 +6,8 @@ namespace model;
 
 class Session
 {
+    private static $RELOAD_COUNTER = 'RELOAD_COUNTER';
+
     public function __construct()
     {
         session_start();
@@ -15,6 +17,18 @@ class Session
     {
         session_unset();
         session_destroy();
+    }
+
+    public function increaseReloadCounter(): void
+    {
+        $this->set(self::$RELOAD_COUNTER, $this->getReloadCounter() + 1);
+    }
+
+    public function getReloadCounter(): Int
+    {
+        return $this->has(self::$RELOAD_COUNTER)
+        ? $this->get(self::$RELOAD_COUNTER)
+        : 0;
     }
 
     public function has(string $name): bool

@@ -6,11 +6,13 @@ class SessionState
 {
     private $username;
     private $isAuthenticated;
+    private $reloadCounter;
 
-    public function __construct(string $username = "", bool $isAuth = false)
+    public function __construct(string $username = "", bool $isAuth = false, int $reloadCounter = 0)
     {
         $this->setUsername($username);
         $this->setAuthentication($isAuth);
+        $this->reloadCounter = $reloadCounter;
     }
 
     public function setUsername(string $newName)
@@ -31,6 +33,11 @@ class SessionState
     public function isAuthenticated(): bool
     {
         return $this->isAuthenticated;
+    }
+
+    public function isFirstLogin(): bool
+    {
+        return $this->reloadCounter === 0;
     }
 
 }

@@ -30,7 +30,9 @@ class Storage
     {
         // TODO: Test if there is a matching user or return a new user.
         if ($this->session->has("username")) {
-            return new SessionState($this->session->get("username"), true);
+            $this->session->increaseReloadCounter();
+            $reloads = $this->session->getReloadCounter();
+            return new SessionState($this->session->get("username"), true, $reloads);
         }
         return new SessionState();
     }
@@ -38,6 +40,7 @@ class Storage
     public function saveToSession(UserCredentials $user): void
     {
         if ($this->authenticateUser($user)) {
+            $this->session->set("username", $user->getUsername());
             $this->session->set("username", $user->getUsername());
         }
     }
