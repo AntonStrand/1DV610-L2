@@ -3,6 +3,7 @@
 namespace view;
 
 use \Exception;
+use \model\SessionState;
 use \model\UserCredentials;
 
 class LoginView
@@ -16,9 +17,21 @@ class LoginView
     private static $keep = 'LoginView::KeepMeLoggedIn';
     private static $messageId = 'LoginView::Message';
 
+    private $user;
+
+    public function __construct(SessionState $user)
+    {
+        $this->user = $user;
+    }
+
     public function shouldLogin(): bool
     {
         return $this->hasClickedLogin() && $this->isInputValid();
+    }
+
+    public function shouldLogout(): bool
+    {
+        return $this->hasClickedLogout();
     }
 
     public function getUserCredentials(): UserCredentials
@@ -41,8 +54,13 @@ class LoginView
             $message .= $this->getFormError();
         }
 
-        $response = $this->generateLoginFormHTML($message);
-        //$response .= $this->generateLogoutButtonHTML($message);
+        if ($this->user->isAuthenticated()) {
+            $message = 'Welcome';
+            $response = $this->generateLogoutButtonHTML($message);
+        } else {
+            $response = $this->generateLoginFormHTML($message);
+        }
+
         return $response;
     }
     /**
@@ -74,7 +92,7 @@ class LoginView
 					<p id="' . self::$messageId . '">' . $message . '</p>
 
 					<label for="' . self::$name . '">Username :</label>
-					<input type="text" id="' . self::$name . '" name="' . self::$name . '" value="" />
+					<input type="text" id="' . self::$name . '" name="' . self::$name . '" value="' . $this->getUsername() . '" />
 					<label for="' . self::$password . '">Password :</label>
 					<input type="password" id="' . self::$password . '" name="' . self::$password . '" />
 					<label for="' . self::$keep . '">Keep me logged in  :</label>
@@ -143,5 +161,16 @@ class LoginView
     private function hasClickedLogin(): bool
     {
         return isset($_POST[self::$login]);
+    }
+
+    private function hasClickedLogout(): bool
+    {
+        return isset($_POST[self::$logout]);
+    }
+
+    private function getUsername(): string
+    {
+        $username = $this->user->getUsername();
+        return $username !== '' ? $username : $this->getCleanedRequestUsername();
     }
 }

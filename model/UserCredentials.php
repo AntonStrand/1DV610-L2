@@ -20,4 +20,14 @@ class UserCredentials
         $this->password = new Password($password);
         $this->keepLoggedIn = $keepLoggedIn;
     }
+
+    public function getUsername(): string
+    {
+        return $this->username->getUsername();
+    }
+
+    public function getPassword(): string
+    {
+        return $this->password->getPassword();
+    }
 }

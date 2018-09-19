@@ -3,7 +3,7 @@
 namespace model;
 
 use \model\Session;
-use \model\User;
+use \model\SessionState;
 
 class Storage
 {
@@ -26,14 +26,13 @@ class Storage
         return ($tempUsername == $username) && password_verify($password, $tempPassword);
     }
 
-    public function getUser(): User
+    public function getSessionState(): SessionState
     {
         // TODO: Test if there is a matching user or return a new user.
         if ($this->session->has("username")) {
-            echo "Oh, yes it has";
-            return new User($this->session->get("username"), true);
+            return new SessionState($this->session->get("username"), true);
         }
-        return new User();
+        return new SessionState();
     }
 
     public function saveToSession(UserCredentials $user): void
