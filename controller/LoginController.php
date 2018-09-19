@@ -27,7 +27,7 @@ class LoginController
             $userCredentials = $this->view->getUserCredentials();
             if ($this->storage->authenticateUser($userCredentials)) {
                 $this->sessionState->setUsername($userCredentials->getUsername());
-                $this->sessionState->setAuthentication(true);
+                $this->sessionState->login();
             }
             $this->storage->saveToSession($userCredentials);
         }
@@ -36,7 +36,7 @@ class LoginController
     private function handleLogout(): void
     {
         if ($this->view->shouldLogout()) {
-            $this->sessionState->setAuthentication(false);
+            $this->sessionState->logout();
             $this->storage->destroySession();
         }
     }

@@ -55,24 +55,12 @@ class LoginView
         } else if ($this->state->isAuthenticated()) {
             $message = $this->state->isFirstLogin() ? 'Welcome' : '';
         } else if ($this->shouldLogout()) {
-            $message = 'Bye bye!';
+            $message = $this->state->isFirstLogout() ? 'Bye bye!' : '';
         } else if ($this->hasClickedLogin()) {
             $message = $this->getFormError();
         } else {
             $message = '';
         }
-
-        // if ($this->hasClickedLogin()) {
-        //     $error = $this->getFormError();
-        //     $message = $error;
-        //     if (strlen($error) == 0 && !$this->state->isAuthenticated()) {
-        //         $message = "Wrong name or password";
-        //     }
-        // }
-
-        // if ($this->hasClickedLogout()) {
-        //     $message = 'Bye bye';
-        // }
 
         if ($this->state->isAuthenticated()) {
             $response = $this->generateLogoutButtonHTML($message);

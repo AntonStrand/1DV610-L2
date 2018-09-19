@@ -11,7 +11,7 @@ class SessionState
     public function __construct(string $username = "", bool $isAuth = false, int $reloadCounter = 0)
     {
         $this->setUsername($username);
-        $this->setAuthentication($isAuth);
+        $this->isAuthenticated = $isAuth;
         $this->reloadCounter = $reloadCounter;
     }
 
@@ -25,9 +25,17 @@ class SessionState
         return $this->username;
     }
 
-    public function setAuthentication(bool $isAuth): void
+    public function login(): void
     {
-        $this->isAuthenticated = $isAuth;
+        $this->isAuthenticated = true;
+    }
+
+    public function logout(): void
+    {
+        if ($this->isAuthenticated()) {
+            $this->reloadCounter = 0;
+            $this->isAuthenticated = false;
+        }
     }
 
     public function isAuthenticated(): bool
@@ -36,6 +44,11 @@ class SessionState
     }
 
     public function isFirstLogin(): bool
+    {
+        return $this->reloadCounter === 1;
+    }
+
+    public function isFirstLogout(): bool
     {
         return $this->reloadCounter === 0;
     }

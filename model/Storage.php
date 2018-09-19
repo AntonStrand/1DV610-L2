@@ -28,13 +28,14 @@ class Storage
 
     public function getSessionState(): SessionState
     {
+        $this->session->increaseReloadCounter();
+        $reloads = $this->session->getReloadCounter();
+
         // TODO: Test if there is a matching user or return a new user.
         if ($this->session->has("username")) {
-            $this->session->increaseReloadCounter();
-            $reloads = $this->session->getReloadCounter();
             return new SessionState($this->session->get("username"), true, $reloads);
         }
-        return new SessionState();
+        return new SessionState('', false, $reloads);
     }
 
     public function saveToSession(UserCredentials $user): void
