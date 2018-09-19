@@ -51,7 +51,11 @@ class LoginView
         $message = '';
 
         if ($this->hasClickedLogin()) {
-            $message .= $this->getFormError();
+            $error = $this->getFormError();
+            $message = $error;
+            if (strlen($error) == 0 && !$this->user->isAuthenticated()) {
+                $message = "Wrong name or password";
+            }
         }
 
         if ($this->user->isAuthenticated()) {
@@ -66,7 +70,7 @@ class LoginView
     /**
      * Generate HTML code on the output buffer for the logout button
      * @param $message, String output message
-     * @return  void, BUT writes to standard output!
+     * @return void, BUT writes to standard output!
      */
     private function generateLogoutButtonHTML($message)
     {
