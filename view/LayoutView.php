@@ -14,7 +14,7 @@ class LayoutView
         </head>
         <body>
           <h1>Assignment 2</h1>
-          ' . $this->renderRegisterLink($isLoggedIn, $v) . '
+          ' . $this->renderLink($isLoggedIn, $v) . '
           ' . $this->renderIsLoggedIn($isLoggedIn) . '
 
           <div class="container">
@@ -36,7 +36,7 @@ class LayoutView
         }
     }
 
-    private function renderRegisterLink(bool $isLoggedIn, IView $v): string
+    private function renderLink(bool $isLoggedIn, IView $v): string
     {
         return ($v instanceof LoginView)
         ? ($isLoggedIn ? '' : '<a href="?register">Register a new user</a>')
