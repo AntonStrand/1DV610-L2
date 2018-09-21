@@ -7,6 +7,7 @@ use \model\SessionState;
 
 class Storage
 {
+    private static $SESSION_KEY = __NAMESPACE__ . __CLASS__ . "state";
     private $session;
 
     public function __construct()
@@ -32,8 +33,8 @@ class Storage
         $reloads = $this->session->getReloadCounter();
 
         // TODO: Test if there is a matching user or return a new user.
-        if ($this->session->has("username")) {
-            return new SessionState($this->session->get("username"), true, $reloads);
+        if ($this->session->has(self::$SESSION_KEY)) {
+            return new SessionState($this->session->get(self::$SESSION_KEY), true, $reloads);
         }
         return new SessionState('', false, $reloads);
     }
@@ -41,8 +42,8 @@ class Storage
     public function saveToSession(UserCredentials $user): void
     {
         if ($this->authenticateUser($user)) {
-            $this->session->set("username", $user->getUsername());
-            $this->session->set("username", $user->getUsername());
+            $this->session->set(self::$SESSION_KEY, $user->getUsername());
+            $this->session->set(self::$SESSION_KEY, $user->getUsername());
         }
     }
 
