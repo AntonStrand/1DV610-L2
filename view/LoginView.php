@@ -42,7 +42,13 @@ class LoginView implements IView
 
     public function getUserCredentials(): UserCredentials
     {
-        return $this->createUserCredetials();
+        if ($this->hasRequiredInput()) {
+            $username = $this->getRequestUsername();
+            $password = $this->getRequestPassword();
+            $keepLoggedIn = $this->keepLoggedIn();
+
+            return new UserCredentials($username, $password, $keepLoggedIn);
+        }
     }
 
     /**
@@ -137,7 +143,7 @@ class LoginView implements IView
         }
 
         try {
-            $this->createUserCredetials();
+            $this->getUserCredentials();
         } catch (Exception $e) {
             return $e->getMessage();
         }
@@ -147,9 +153,9 @@ class LoginView implements IView
 
     private function isInputValid(): bool
     {
-        if ($this->hasInput()) {
+        if ($this->hasRequiredInput()) {
             try {
-                $this->createUserCredetials();
+                $this->getUserCredentials();
                 return true;
             } catch (Exception $e) {
                 return false;
@@ -159,24 +165,13 @@ class LoginView implements IView
         return false;
     }
 
-    private function createUserCredetials(): UserCredentials
-    {
-        if ($this->hasInput()) {
-            $username = $this->getRequestUsername();
-            $password = $this->getRequestPassword();
-            $keepLoggedIn = $this->keepLoggedIn();
-
-            return new UserCredentials($username, $password, $keepLoggedIn);
-        }
-    }
-
     private function cleanInput(string $input): string
     {
         return trim(strip_tags($input));
     }
 
     ### LOCAL GETTERS ###
-    private function hasInput(): bool
+    private function hasRequiredInput(): bool
     {
         return $this->hasUsername() && $this->hasPassword();
     }
