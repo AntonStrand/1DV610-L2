@@ -2,7 +2,7 @@
 
 namespace view;
 
-class RegisterView
+class RegisterView implements IView
 {
     private static $register = 'RegisterView::Register';
     private static $name = 'RegisterView::UserName';
@@ -15,9 +15,9 @@ class RegisterView
      *
      * Should be called when a register attempt has been determined
      *
-     * @return void BUT writes to standard output and cookies!
+     * @return string and writes to cookies!
      */
-    public function response()
+    public function response(): string
     {
         $message = '';
 

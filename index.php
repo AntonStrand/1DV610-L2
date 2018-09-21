@@ -1,5 +1,8 @@
 <?php
 
+# Interface
+require_once 'view/IView.php';
+
 # View
 require_once 'view/LoginView.php';
 require_once 'view/DateTimeView.php';
@@ -31,3 +34,6 @@ $lv = new \view\LayoutView();
 $c = new \controller\LoginController($v, $storage, $state);
 
 $lv->render($state->isAuthenticated(), $v, $dtv);
+
+## USE TO ROUTER REGISTER
+// echo isset($_GET["register"]) ? 'register' : 'nope';

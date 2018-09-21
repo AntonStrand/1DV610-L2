@@ -6,7 +6,7 @@ use \Exception;
 use \model\SessionState;
 use \model\UserCredentials;
 
-class LoginView
+class LoginView implements IView
 {
     private static $login = 'LoginView::Login';
     private static $logout = 'LoginView::Logout';

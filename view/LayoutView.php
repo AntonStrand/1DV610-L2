@@ -4,7 +4,7 @@ namespace view;
 
 class LayoutView
 {
-    public function render($isLoggedIn, LoginView $v, DateTimeView $dtv)
+    public function render($isLoggedIn, IView $v, DateTimeView $dtv)
     {
         echo '<!DOCTYPE html>
       <html>
@@ -14,7 +14,7 @@ class LayoutView
         </head>
         <body>
           <h1>Assignment 2</h1>
-          ' . $this->renderRegisterLink($isLoggedIn) . '
+          ' . $this->renderRegisterLink($isLoggedIn, $v) . '
           ' . $this->renderIsLoggedIn($isLoggedIn) . '
 
           <div class="container">
@@ -36,8 +36,10 @@ class LayoutView
         }
     }
 
-    private function renderRegisterLink($isLoggedIn): string
+    private function renderRegisterLink(bool $isLoggedIn, IView $v): string
     {
-        return $isLoggedIn ? '' : '<a href="?register">Register a new user</a>';
+        return ($v instanceof LoginView)
+        ? ($isLoggedIn ? '' : '<a href="?register">Register a new user</a>')
+        : '<a href="?">Back to login</a>';
     }
 }
