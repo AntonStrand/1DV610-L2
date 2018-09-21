@@ -40,7 +40,7 @@ class RegisterView
 					<p id="' . self::$messageId . '">' . $message . '</p>
 
 					<label for="' . self::$name . '">Username :</label>
-					<input type="text" id="' . self::$name . '" name="' . self::$name . '" value="' . $this->getUsername() . '" />
+					<input type="text" id="' . self::$name . '" name="' . self::$name . '" value="" />
 					<label for="' . self::$password . '">Password :</label>
 					<input type="password" id="' . self::$password . '" name="' . self::$password . '" />
 					<label for="' . self::$repeatPwd . '">Repeat password :</label>
