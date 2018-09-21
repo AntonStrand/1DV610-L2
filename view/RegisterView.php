@@ -43,11 +43,13 @@ class RegisterView implements IView
         try {
             $username = $this->getUsername();
             $filtered = $this->getCleanedUsername();
+
             if (strlen($username) === strlen($filtered)) {
                 new \model\Username($filtered);
             } else {
                 $errors[] = 'Username contains invalid characters.';
             }
+
         } catch (\Exception $e) {
             $errors[] = $e->getMessage();
         }
