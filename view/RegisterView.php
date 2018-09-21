@@ -44,7 +44,7 @@ class RegisterView implements IView
             $username = $this->getUsername();
             $filtered = $this->getCleanedUsername();
             if (strlen($username) === strlen($filtered)) {
-                new \model\Username();
+                new \model\Username($filtered);
             } else {
                 $errors[] = 'Username contains invalid characters.';
             }
@@ -58,7 +58,7 @@ class RegisterView implements IView
             $errors[] = $e->getMessage();
         }
 
-        if (count($errors) === 0 && $this->hasPassword() && $this->hasRepeatedPassword() && $this->isPasswordMatching()) {
+        if (count($errors) === 0 && !$this->isPasswordMatching()) {
             $errors[] = 'Passwords do not match.';
         }
 
@@ -78,13 +78,19 @@ class RegisterView implements IView
 
     private function isPasswordMatching(): bool
     {
-        try {
-            $pwd1 = new \model\Password($this->getPassword());
-            $pwd2 = new \model\Password($this->getRepeatedPassword());
-            return $pwd1->getPassword() === $pwd2->getPassword();
-        } catch (\Exception $e) {
-            return false;
+        $isMatch = false;
+
+        if ($this->hasPassword() && $this->hasRepeatedPassword()) {
+            try {
+                $pwd1 = new \model\Password($this->getPassword());
+                $pwd2 = new \model\Password($this->getRepeatedPassword());
+                $isMatch = $pwd1->getPassword() === $pwd2->getPassword();
+            } catch (\Exception $e) {
+                $isMatch = false;
+            }
         }
+        return $isMatch;
+
     }
 
     private function hasClickedRegister(): bool
