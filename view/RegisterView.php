@@ -7,7 +7,7 @@ class RegisterView implements IView
     private static $register = 'RegisterView::Register';
     private static $name = 'RegisterView::UserName';
     private static $password = 'RegisterView::Password';
-    private static $repeatPwd = 'RegisterView::repeatPwd';
+    private static $repeatPwd = 'RegisterView::PasswordRepeat';
     private static $messageId = 'RegisterView::Message';
 
     /**
@@ -34,17 +34,18 @@ class RegisterView implements IView
     private function generateRegisterFormHTML($message)
     {
         return '
+            <h2>Register new user</h2>
 			<form method="post" >
-				<fieldset>
-					<legend>Register a new user - Write Username and password</legend>
+                <fieldset>
+                    <legend>Register a new user - Write Username and password</legend>
 					<p id="' . self::$messageId . '">' . $message . '</p>
 
 					<label for="' . self::$name . '">Username :</label>
-					<input type="text" id="' . self::$name . '" name="' . self::$name . '" value="" />
+					<input type="text" id="' . self::$name . '" name="' . self::$name . '" value="" /><br>
 					<label for="' . self::$password . '">Password :</label>
-					<input type="password" id="' . self::$password . '" name="' . self::$password . '" />
+					<input type="password" id="' . self::$password . '" name="' . self::$password . '" /><br>
 					<label for="' . self::$repeatPwd . '">Repeat password :</label>
-					<input type="password" id="' . self::$repeatPwd . '" name="' . self::$repeatPwd . '" />
+					<input type="password" id="' . self::$repeatPwd . '" name="' . self::$repeatPwd . '" /><br>
 
 					<input type="submit" name="' . self::$register . '" value="Register" />
 				</fieldset>

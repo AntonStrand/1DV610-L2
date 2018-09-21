@@ -16,12 +16,18 @@ class LoginView implements IView
     private static $cookiePassword = 'LoginView::CookiePassword';
     private static $keep = 'LoginView::KeepMeLoggedIn';
     private static $messageId = 'LoginView::Message';
+    private static $register = 'register';
 
     private $state;
 
     public function __construct(SessionState $state)
     {
         $this->state = $state;
+    }
+
+    public function wantsToRegister(): bool
+    {
+        return isset($_GET[self::$register]);
     }
 
     public function shouldLogin(): bool
