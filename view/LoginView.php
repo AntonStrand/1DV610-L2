@@ -128,31 +128,46 @@ class LoginView implements IView
 
     private function getFormError(): string
     {
+        if (!$this->hasUsername()) {
+            return 'Username is missing';
+        }
+
+        if (!$this->hasPassword()) {
+            return 'Password is missing';
+        }
+
         try {
             $this->createUserCredetials();
-            return '';
         } catch (Exception $e) {
             return $e->getMessage();
         }
+
+        return '';
     }
 
     private function isInputValid(): bool
     {
-        try {
-            $this->createUserCredetials();
-            return true;
-        } catch (Exception $e) {
-            return false;
+        if ($this->hasInput()) {
+            try {
+                $this->createUserCredetials();
+                return true;
+            } catch (Exception $e) {
+                return false;
+            }
         }
+
+        return false;
     }
 
     private function createUserCredetials(): UserCredentials
     {
-        $username = $this->getCleanedRequestUsername();
-        $password = $this->getCleanedRequestPassword();
-        $keepLoggedIn = $this->keepLoggedIn();
+        if ($this->hasInput()) {
+            $username = $this->getRequestUsername();
+            $password = $this->getRequestPassword();
+            $keepLoggedIn = $this->keepLoggedIn();
 
-        return new UserCredentials($username, $password, $keepLoggedIn);
+            return new UserCredentials($username, $password, $keepLoggedIn);
+        }
     }
 
     private function cleanInput(string $input): string
@@ -161,14 +176,28 @@ class LoginView implements IView
     }
 
     ### LOCAL GETTERS ###
-    private function getCleanedRequestUsername(): string
+    private function hasInput(): bool
+    {
+        return $this->hasUsername() && $this->hasPassword();
+    }
+
+    private function hasUsername(): bool
+    {
+        return isset($_POST[self::$name]) && !empty($this->cleanInput($this->getRequestUsername()));
+    }
+    private function hasPassword(): bool
+    {
+        return isset($_POST[self::$password]) && !empty($this->cleanInput($this->getRequestPassword()));
+    }
+
+    private function getRequestUsername(): string
     {
         return isset($_POST[self::$name])
-        ? $this->cleanInput($_POST[self::$name])
+        ? $_POST[self::$name]
         : '';
     }
 
-    private function getCleanedRequestPassword(): string
+    private function getRequestPassword(): string
     {
         return isset($_POST[self::$password])
         ? $this->cleanInput($_POST[self::$password])
@@ -193,7 +222,7 @@ class LoginView implements IView
     private function getUsername(): string
     {
         $username = $this->state->getUsername();
-        return $username !== '' ? $username : $this->getCleanedRequestUsername();
+        return $username !== '' ? $username : $this->getRequestUsername();
     }
 
     private function loginFailed(): bool

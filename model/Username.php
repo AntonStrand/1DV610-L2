@@ -28,9 +28,6 @@ class Username
      */
     public function setUsername(string $username): void
     {
-        if (empty($username)) {
-            throw new \Exception("Username is missing");
-        }
         if ($this->isTooShort($username)) {
             throw new \LengthException("Username has too few characters, at least " . self::MIN_LENGTH . " characters.");
         }

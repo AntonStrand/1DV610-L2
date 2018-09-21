@@ -28,9 +28,6 @@ class Password
 
     public function setPassword(string $password)
     {
-        if (empty($password)) {
-            throw new \Exception("Password is missing");
-        }
         if ($this->isTooShort($password)) {
             throw new \LengthException("Password has too few characters, at least " . self::MIN_LENGTH . " characters.");
         }
