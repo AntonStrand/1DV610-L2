@@ -41,25 +41,31 @@ class RegisterView implements IView
 
         $errors = array();
         try {
-            new \model\Username($this->getCleanedUsername());
+            $username = $this->getUsername();
+            $filtered = $this->getCleanedUsername();
+            if (strlen($username) === strlen($filtered)) {
+                new \model\Username();
+            } else {
+                $errors[] = 'Username contains invalid characters.';
+            }
         } catch (\Exception $e) {
             $errors[] = $e->getMessage();
         }
 
         try {
-            new \model\Password($this->getCleanedPassword());
+            new \model\Password($this->getPassword());
         } catch (\Exception $e) {
             $errors[] = $e->getMessage();
+        }
+
+        if (count($errors) === 0 && $this->hasPassword() && $this->hasRepeatedPassword() && $this->isPasswordMatching()) {
+            $errors[] = 'Passwords do not match.';
         }
 
         if (count($errors) > 0) {
             foreach ($errors as $error) {
                 $errorsAsString .= $error . '<br>';
             }
-        }
-
-        if (count($errors) === 0 && $this->hasPassword() && $this->hasRepeatedPassword()) {
-            $errorsAsString .= $this->isPasswordMatching() ? '' : 'Passwords do not match.';
         }
 
         return $errorsAsString;
@@ -73,8 +79,8 @@ class RegisterView implements IView
     private function isPasswordMatching(): bool
     {
         try {
-            $pwd1 = new \model\Password($this->getCleanedPassword());
-            $pwd2 = new \model\Password($this->getCleanedRepeatedPassword());
+            $pwd1 = new \model\Password($this->getPassword());
+            $pwd2 = new \model\Password($this->getRepeatedPassword());
             return $pwd1->getPassword() === $pwd2->getPassword();
         } catch (\Exception $e) {
             return false;
@@ -101,24 +107,30 @@ class RegisterView implements IView
         return isset($_POST[self::$repeatPwd]) && strlen($_POST[self::$repeatPwd]) > 0;
     }
 
-    private function getCleanedUsername(): string
+    private function getUsername(): string
     {
         return $this->hasUsername()
-        ? $this->cleanInput($_POST[self::$name])
+        ? $_POST[self::$name]
         : '';
     }
 
-    private function getCleanedPassword(): string
+    private function getCleanedUsername(): string
+    {
+        return $this->cleanInput($this->getUsername());
+
+    }
+
+    private function getPassword(): string
     {
         return $this->hasPassword()
-        ? $this->cleanInput($_POST[self::$password])
+        ? $_POST[self::$password]
         : '';
     }
 
-    private function getCleanedRepeatedPassword(): string
+    private function getRepeatedPassword(): string
     {
         return $this->hasRepeatedPassword()
-        ? $this->cleanInput($_POST[self::$repeatPwd])
+        ? $_POST[self::$repeatPwd]
         : '';
     }
 
