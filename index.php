@@ -12,6 +12,7 @@ require_once 'view/LayoutView.php';
 # Controller
 require_once 'controller/LoginController.php';
 require_once 'controller/MainController.php';
+require_once 'controller/RegisterController.php';
 
 # Model
 require_once 'model/SessionState.php';

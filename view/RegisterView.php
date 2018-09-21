@@ -12,7 +12,7 @@ class RegisterView implements IView
 
     public function shouldRegister(): bool
     {
-        return $this->hasClickedRegister() && $this->isInputValid();
+        return $this->hasClickedRegister() && $this->isValidInput();
     }
 
     /**
@@ -75,7 +75,7 @@ class RegisterView implements IView
 
     private function isValidInput(): bool
     {
-        return count($this->getErrorMessages) === '' && $this->isPasswordMatching();
+        return strlen($this->getErrorMessages()) === 0 && $this->isPasswordMatching();
     }
 
     private function isPasswordMatching(): bool

@@ -3,6 +3,7 @@
 namespace controller;
 
 use \controller\LoginController;
+use \controller\RegisterController;
 use \model\Storage;
 use \view\DateTimeView;
 use \view\LayoutView;
@@ -34,6 +35,7 @@ class MainController
     public function route(): void
     {
         if ($this->loginView->wantsToRegister()) {
+            new RegisterController($this->registerView, $this->storage, $this->state);
             $this->layoutView->render(
                 false,
                 $this->registerView,
