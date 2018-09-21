@@ -23,7 +23,7 @@ class RegisterController
     private function handleRegister(): void
     {
         if ($this->view->shouldRegister()) {
-            echo 'register';
+            $userCredentials = $this->view->getUserCredentials();
         }
     }
 }

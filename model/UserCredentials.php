@@ -14,7 +14,7 @@ class UserCredentials
      * @param string $password
      * @param boolean $keepLoggedIn
      */
-    public function __construct(string $username, string $password, bool $keepLoggedIn)
+    public function __construct(string $username, string $password, bool $keepLoggedIn = false)
     {
         $this->username = new Username($username);
         $this->password = new Password($password);

@@ -47,6 +47,11 @@ class Storage
         }
     }
 
+    public function saveUser(UserCredentials $user): void
+    {
+        throw new \Exception('saveUser is not implemented');
+    }
+
     public function destroySession(): void
     {
         $this->session->destroy();

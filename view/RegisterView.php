@@ -2,6 +2,8 @@
 
 namespace view;
 
+use \model\UserCredentials;
+
 class RegisterView implements IView
 {
     private static $register = 'RegisterView::Register';
@@ -13,6 +15,14 @@ class RegisterView implements IView
     public function shouldRegister(): bool
     {
         return $this->hasClickedRegister() && $this->isValidInput();
+    }
+
+    public function getUserCredentials(): UserCredentials
+    {
+        return new UserCredentials(
+            $this->getCleanedUsername(),
+            $this->getCleanedPassword())
+        ;
     }
 
     /**
@@ -55,7 +65,7 @@ class RegisterView implements IView
         }
 
         try {
-            new \model\Password($this->getPassword());
+            new \model\Password($this->getCleanedPassword());
         } catch (\Exception $e) {
             $errors[] = $e->getMessage();
         }
@@ -84,7 +94,7 @@ class RegisterView implements IView
 
         if ($this->hasPassword() && $this->hasRepeatedPassword()) {
             try {
-                $pwd1 = new \model\Password($this->getPassword());
+                $pwd1 = new \model\Password($this->getCleanedPassword());
                 $pwd2 = new \model\Password($this->getRepeatedPassword());
                 $isMatch = $pwd1->getPassword() === $pwd2->getPassword();
             } catch (\Exception $e) {
@@ -128,10 +138,10 @@ class RegisterView implements IView
 
     }
 
-    private function getPassword(): string
+    private function getCleanedPassword(): string
     {
         return $this->hasPassword()
-        ? $_POST[self::$password]
+        ? $this->cleanInput($_POST[self::$password])
         : '';
     }
 
