@@ -6,22 +6,22 @@ class Database
 {
     private $conn;
 
-    public function connect(): void
+    public function isCorrectUserCredentials(UserCredentials $user): bool
     {
-        //TODO: seperate settings to a env file
-        $user = 'root';
-        $password = 'root';
-        $db = '1dv610';
-        $host = 'localhost';
-        $port = 8889;
+        $username = $user->getUsername();
+        $password = $user->getPassword();
 
-        $this->conn = mysqli_connect(
-            $host,
-            $user,
-            $password,
-            $db,
-            $port
-        );
+        if (!$this->isConnected()) {
+            $this->connect();
+        }
+
+        $userData = mysqli_fetch_assoc($this->getUser($username));
+
+        $dbUsername = $userData["username"];
+        $dbPassword = $userData["password"];
+
+        return password_verify($password, $dbPassword) && $username === $dbUsername;
+
     }
 
     public function saveUser(string $username, string $password)
@@ -44,6 +44,11 @@ class Database
 
     private function isUsernameTaken(string $username): bool
     {
+        return mysqli_num_rows($this->getUser($username)) > 0;
+    }
+
+    private function getUser(string $username): object
+    {
         $stmt = $this->prepareStatement(
             "SELECT * FROM users WHERE username=?;"
         );
@@ -52,9 +57,7 @@ class Database
 
         mysqli_stmt_execute($stmt);
 
-        $userFromDB = mysqli_stmt_get_result($stmt);
-
-        return mysqli_num_rows($userFromDB) > 0;
+        return mysqli_stmt_get_result($stmt);
     }
 
     /**
@@ -77,5 +80,23 @@ class Database
     private function isConnected(): bool
     {
         return $this->conn !== null;
+    }
+
+    private function connect(): void
+    {
+        //TODO: seperate settings to a env file
+        $user = 'root';
+        $password = 'root';
+        $db = '1dv610';
+        $host = 'localhost';
+        $port = 8889;
+
+        $this->conn = mysqli_connect(
+            $host,
+            $user,
+            $password,
+            $db,
+            $port
+        );
     }
 }

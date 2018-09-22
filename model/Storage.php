@@ -8,6 +8,7 @@ use \model\SessionState;
 class Storage
 {
     private static $SESSION_KEY = __NAMESPACE__ . __CLASS__ . "state";
+    // private static $SESSION_KEY_NEW_REG = __NAMESPACE__ . __CLASS__ . "state_new_reg";
     private $session;
     private $db;
 
@@ -19,14 +20,7 @@ class Storage
 
     public function authenticateUser(UserCredentials $user): bool
     {
-        // TODO: Should be replaced with a proper mySQL query
-        $tempUsername = 'Admin';
-        $tempPassword = password_hash('Password', PASSWORD_BCRYPT);
-
-        $username = $user->getUsername();
-        $password = $user->getPassword();
-
-        return ($tempUsername == $username) && password_verify($password, $tempPassword);
+        return $this->db->isCorrectUserCredentials($user);
     }
 
     public function getSessionState(): SessionState
@@ -38,6 +32,11 @@ class Storage
         if ($this->session->has(self::$SESSION_KEY)) {
             return new SessionState($this->session->get(self::$SESSION_KEY), true, $reloads);
         }
+
+        // if ($this->session->has(self::$SESSION_KEY_NEW_REG)) {
+        //     return new SessionState($this->session->get(self::$SESSION_KEY_NEW_REG), false, $reloads);
+        // }
+
         return new SessionState('', false, $reloads);
     }
 
@@ -45,8 +44,8 @@ class Storage
     {
         if ($this->authenticateUser($user)) {
             $this->session->set(self::$SESSION_KEY, $user->getUsername());
-            $this->session->set(self::$SESSION_KEY, $user->getUsername());
         }
+        // $this->session->set(self::$SESSION_KEY_NEW_REG, $user->getUsername());
     }
 
     public function saveUser(UserCredentials $user): void
