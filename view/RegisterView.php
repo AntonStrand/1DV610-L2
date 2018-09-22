@@ -39,10 +39,9 @@ class RegisterView implements IView
 
     private function getMessage(): string
     {
-        if ($this->hasClickedRegister()) {
-            return $this->getErrorMessages();
-        }
-        return '';
+        return ($this->hasClickedRegister())
+        ? $this->getErrorMessages()
+        : '';
     }
 
     private function getErrorMessages(): string
