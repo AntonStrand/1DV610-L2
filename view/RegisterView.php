@@ -48,8 +48,9 @@ class RegisterView implements IView
     private function getErrorMessages(): string
     {
         $errorsAsString = '';
-
         $errors = array();
+
+        # Test username
         try {
             $username = $this->getUsername();
             $filtered = $this->getCleanedUsername();
@@ -64,20 +65,21 @@ class RegisterView implements IView
             $errors[] = $e->getMessage();
         }
 
+        # Test password
         try {
             new \model\Password($this->getCleanedPassword());
         } catch (\Exception $e) {
             $errors[] = $e->getMessage();
         }
 
+        # Test matching password if no errors where found
         if (count($errors) === 0 && !$this->isPasswordMatching()) {
             $errors[] = 'Passwords do not match.';
         }
 
-        if (count($errors) > 0) {
-            foreach ($errors as $error) {
-                $errorsAsString .= $error . '<br>';
-            }
+        # Turn errors into a string
+        foreach ($errors as $error) {
+            $errorsAsString .= $error . '<br>';
         }
 
         return $errorsAsString;
