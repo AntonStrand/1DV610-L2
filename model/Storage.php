@@ -9,10 +9,12 @@ class Storage
 {
     private static $SESSION_KEY = __NAMESPACE__ . __CLASS__ . "state";
     private $session;
+    private $db;
 
     public function __construct()
     {
-        $this->session = new \model\Session();
+        $this->session = new Session();
+        $this->db = new Database();
     }
 
     public function authenticateUser(UserCredentials $user): bool
@@ -49,7 +51,10 @@ class Storage
 
     public function saveUser(UserCredentials $user): void
     {
-        throw new \Exception('saveUser is not implemented');
+        $username = $user->getUsername();
+        $password = password_hash($user->getPassword(), PASSWORD_BCRYPT);
+
+        $this->db->saveUser($username, $password);
     }
 
     public function destroySession(): void

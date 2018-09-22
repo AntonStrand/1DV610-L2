@@ -27,9 +27,6 @@ require_once 'model/Database.php';
 error_reporting(E_ALL);
 ini_set('display_errors', 'On');
 
-$db = new \model\Database();
-$db->saveUser(new \model\UserCredentials('hello', 'world3e33e'));
-
 // TODO: Add try catch
 $main = new \controller\MainController();
 $main->route();

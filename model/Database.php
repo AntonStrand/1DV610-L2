@@ -8,6 +8,7 @@ class Database
 
     public function connect(): void
     {
+        //TODO: seperate settings to a env file
         $user = 'root';
         $password = 'root';
         $db = '1dv610';
@@ -23,19 +24,15 @@ class Database
         );
     }
 
-    public function saveUser(UserCredentials $user)
+    public function saveUser(string $username, string $password)
     {
         if (!$this->isConnected()) {
             $this->connect();
         }
 
-        if ($this->isUsernameTaken($user)) {
+        if ($this->isUsernameTaken($username)) {
             throw new \Exception("User exists, pick another username.");
         }
-
-        echo "Go ahead and save user";
-        $username = $user->getUsername();
-        $password = $user->getPassword();
 
         $stmt = $this->prepareStatement(
             "INSERT INTO users (username, password) VALUES (?, ?);"
@@ -45,13 +42,12 @@ class Database
         mysqli_stmt_execute($stmt);
     }
 
-    private function isUsernameTaken(UserCredentials $user): bool
+    private function isUsernameTaken(string $username): bool
     {
         $stmt = $this->prepareStatement(
             "SELECT * FROM users WHERE username=?;"
         );
 
-        $username = $user->getUsername();
         mysqli_stmt_bind_param($stmt, "s", $username);
 
         mysqli_stmt_execute($stmt);

@@ -24,6 +24,7 @@ class RegisterController
     {
         if ($this->view->shouldRegister()) {
             $userCredentials = $this->view->getUserCredentials();
+            $this->storage->saveUser($userCredentials);
         }
     }
 }
