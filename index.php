@@ -21,10 +21,14 @@ require_once 'model/Password.php';
 require_once 'model/UserCredentials.php';
 require_once 'model/Storage.php';
 require_once 'model/Session.php';
+require_once 'model/Database.php';
 
 //MAKE SURE ERRORS ARE SHOWN... MIGHT WANT TO TURN THIS OFF ON A PUBLIC SERVER
 error_reporting(E_ALL);
 ini_set('display_errors', 'On');
+
+$db = new \model\Database();
+$db->saveUser(new \model\UserCredentials('hello', 'world3e33e'));
 
 // TODO: Add try catch
 $main = new \controller\MainController();
