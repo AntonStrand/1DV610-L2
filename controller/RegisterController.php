@@ -23,8 +23,14 @@ class RegisterController
     private function handleRegister(): void
     {
         if ($this->view->shouldRegister()) {
-            $userCredentials = $this->view->getUserCredentials();
-            $this->storage->saveUser($userCredentials);
+            try {
+                $userCredentials = $this->view->getUserCredentials();
+                $this->storage->saveUser($userCredentials);
+                $this->storage->saveToSession($userCredentials);
+                header("Location: ../index.php");
+            } catch (\Exception $e) {
+                $this->view->showError($e->getMessage());
+            }
         }
     }
 }

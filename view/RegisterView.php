@@ -12,6 +12,8 @@ class RegisterView implements IView
     private static $repeatPwd = 'RegisterView::PasswordRepeat';
     private static $messageId = 'RegisterView::Message';
 
+    private $dbError;
+
     public function shouldRegister(): bool
     {
         return $this->hasClickedRegister() && $this->isValidInput();
@@ -23,6 +25,11 @@ class RegisterView implements IView
             $this->getCleanedUsername(),
             $this->getCleanedPassword())
         ;
+    }
+
+    public function showError(string $error): void
+    {
+        $this->dbError = $error;
     }
 
     /**
@@ -79,6 +86,10 @@ class RegisterView implements IView
         # Turn errors into a string
         foreach ($errors as $error) {
             $errorsAsString .= $error . '<br>';
+        }
+
+        if ($this->dbError !== null) {
+            $errorsAsString = $this->dbError;
         }
 
         return $errorsAsString;
