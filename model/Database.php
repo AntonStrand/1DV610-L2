@@ -34,6 +34,15 @@ class Database
         }
 
         echo "Go ahead and save user";
+        $username = $user->getUsername();
+        $password = $user->getPassword();
+
+        $stmt = $this->prepareStatement(
+            "INSERT INTO users (username, password) VALUES (?, ?);"
+        );
+
+        mysqli_stmt_bind_param($stmt, "ss", $username, $password);
+        mysqli_stmt_execute($stmt);
     }
 
     private function isUsernameTaken(UserCredentials $user): bool
