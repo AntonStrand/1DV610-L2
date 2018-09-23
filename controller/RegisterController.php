@@ -26,7 +26,13 @@ class RegisterController
             try {
                 $userCredentials = $this->view->getUserCredentials();
                 $this->storage->saveUser($userCredentials);
-                $this->storage->saveToSession($userCredentials);
+
+                $nextState = new SessionState(
+                    SessionState::$NEW_USER,
+                    $userCredentials->getUsername()
+                );
+
+                $this->storage->saveToSession($nextState);
                 header("Location: ../index.php");
             } catch (\Exception $e) {
                 $this->view->showError($e->getMessage());
