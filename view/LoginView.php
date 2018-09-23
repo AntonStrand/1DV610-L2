@@ -114,13 +114,16 @@ class LoginView implements IView
     private function getFormMessage(): string
     {
         if ($this->loginFailed()) {
-            $message = 'Wrong name or password';
+            $message = "Wrong name or password";
+
+        } else if ($this->state->isFirstLogin() && $this->keepLoggedIn()) {
+            $message = "Welcome and you will be remembered";
 
         } else if ($this->state->isFirstLogin()) {
-            $message = 'Welcome';
+            $message = "Welcome";
 
         } else if ($this->state->isFirstLogout()) {
-            $message = 'Bye bye!';
+            $message = "Bye bye!";
 
         } else if ($this->state->isNewUser()) {
             $message = "Registered new user.";
@@ -129,7 +132,7 @@ class LoginView implements IView
             $message = $this->getFormError();
 
         } else {
-            $message = '';
+            $message = "";
         }
 
         return $message;
