@@ -24,22 +24,23 @@ class Storage
 
     public function getSessionState(): SessionState
     {
-        $this->session->increaseReloadCounter();
-        $reloads = $this->session->getReloadCounter();
-
         // TODO: Test if there is a matching user or return a new user.
         if ($this->session->has(self::$SESSION_KEY)) {
-            return new SessionState($this->session->get(self::$SESSION_KEY), true, $reloads);
+            $prevState = $this->session->get(self::$SESSION_KEY);
+
+            // if ($prevState->getStatus() === SessionState::$FIRST_LOGIN) {
+            //     return new SessionState(SessionState::$POST_LOGIN, $prevState->getUsername(), true);
+            // }
+
+            return $prevState;
         }
 
-        return new SessionState('', false, $reloads);
+        return new SessionState(SessionState::$PRE_LOGIN);
     }
 
-    public function saveToSession(UserCredentials $user): void
+    public function saveToSession(SessionState $state): void
     {
-        if ($this->authenticateUser($user)) {
-            $this->session->set(self::$SESSION_KEY, $user->getUsername());
-        }
+        $this->session->set(self::$SESSION_KEY, $state);
     }
 
     public function saveUser(UserCredentials $user): void

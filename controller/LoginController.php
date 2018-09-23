@@ -23,13 +23,19 @@ class LoginController
 
     private function handleLogin(): void
     {
-        if ($this->view->shouldLogin()) {
+        if ($this->view->shouldLogin() && !$this->sessionState->isAuthenticated()) {
             $userCredentials = $this->view->getUserCredentials();
             if ($this->storage->authenticateUser($userCredentials)) {
                 $this->sessionState->setUsername($userCredentials->getUsername());
+                // $this->sessionState->setStatus(SessionState::$FIRST_LOGIN);
                 $this->sessionState->login();
             }
-            $this->storage->saveToSession($userCredentials);
+            $state = new SessionState(
+                SessionState::$POST_LOGIN,
+                $userCredentials->getUsername(),
+                true
+            );
+            $this->storage->saveToSession($state);
         }
     }
 
