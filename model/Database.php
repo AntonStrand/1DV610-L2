@@ -8,12 +8,10 @@ class Database
 
     public function isCorrectUserCredentials(UserCredentials $user): bool
     {
+        $this->connect();
+
         $username = $user->getUsername();
         $password = $user->getPassword();
-
-        if (!$this->isConnected()) {
-            $this->connect();
-        }
 
         $userData = mysqli_fetch_assoc($this->getUser($username));
 
@@ -21,14 +19,11 @@ class Database
         $dbPassword = $userData["password"];
 
         return password_verify($password, $dbPassword) && $username === $dbUsername;
-
     }
 
     public function saveUser(string $username, string $password)
     {
-        if (!$this->isConnected()) {
-            $this->connect();
-        }
+        $this->connect();
 
         if ($this->isUsernameTaken($username)) {
             throw new \Exception("User exists, pick another username.");
@@ -84,19 +79,21 @@ class Database
 
     private function connect(): void
     {
-        //TODO: seperate settings to a env file
-        $user = 'root';
-        $password = 'root';
-        $db = '1dv610';
-        $host = 'localhost';
-        $port = 8889;
+        if (!$this->isConnected()) {
+            //TODO: seperate settings to a env file
+            $user = 'root';
+            $password = 'root';
+            $db = '1dv610';
+            $host = 'localhost';
+            $port = 8889;
 
-        $this->conn = mysqli_connect(
-            $host,
-            $user,
-            $password,
-            $db,
-            $port
-        );
+            $this->conn = mysqli_connect(
+                $host,
+                $user,
+                $password,
+                $db,
+                $port
+            );
+        }
     }
 }
