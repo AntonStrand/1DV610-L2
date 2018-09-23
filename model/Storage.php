@@ -51,6 +51,11 @@ class Storage
         $this->db->saveUser($username, $password);
     }
 
+    public function saveCookie(UserCredentials $cookie)
+    {
+        $this->db->saveCookie($cookie);
+    }
+
     public function destroySession(): void
     {
         $this->session->destroy();

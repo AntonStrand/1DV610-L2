@@ -21,10 +21,11 @@ class Database
         return password_verify($password, $dbPassword) && $username === $dbUsername;
     }
 
-    public function saveCookie(): void
+    public function saveCookie(UserCredentials $cookie): void
     {
         $this->connect();
-
+        $username = $cookie->getUsername();
+        $password = $cookie->getPassword();
         $this->insertTo("cookies", $username, $password);
     }
 
@@ -102,15 +103,16 @@ class Database
     /**
      * Insert to provided table
      *
-     * @param string $where the name of the table
+     * @param string $table the name of the table
      * @param string $username of the user
      * @param string $password of the user
      * @return void
      */
-    private function insertTo(string $where, string $username, string $password): void
+    private function insertTo(string $table, string $username, string $password): void
     {
+        echo $username . " " . $password;
         $stmt = $this->prepareStatement(
-            "INSERT INTO " . $where . " (username, password) VALUES (?, ?);"
+            "INSERT INTO " . $table . " (username, password) VALUES (?, ?);"
         );
 
         mysqli_stmt_bind_param($stmt, "ss", $username, $password);

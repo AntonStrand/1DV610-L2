@@ -6,6 +6,7 @@ class UserCredentials
     private $username;
     private $password;
     private $keepLoggedIn;
+
     /**
      * Create a instance of a UserCredentials
      *
@@ -29,5 +30,10 @@ class UserCredentials
     public function getPassword(): string
     {
         return $this->password->getPassword();
+    }
+
+    public function keepLoggedIn(): bool
+    {
+        return $this->keepLoggedIn;
     }
 }

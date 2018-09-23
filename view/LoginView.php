@@ -43,12 +43,29 @@ class LoginView implements IView
     public function getUserCredentials(): UserCredentials
     {
         if ($this->hasRequiredInput()) {
+            $keepLoggedIn = $this->keepLoggedIn();
             $username = $this->getRequestUsername();
             $password = $this->getRequestPassword();
-            $keepLoggedIn = $this->keepLoggedIn();
 
             return new UserCredentials($username, $password, $keepLoggedIn);
         }
+    }
+
+    public function shouldSaveCookie(): bool
+    {
+        return $this->state->isAuthenticated() && $this->state->keepLoggedIn();
+    }
+
+    public function getCookieData(): UserCredentials
+    {
+        $state = $this->state;
+        $username = $state->getUsername();
+
+        $aDay = 86400;
+        $randomPassword = bin2hex(random_bytes(20));
+        setcookie(self::$cookieName, $username, time() + $aDay);
+        setcookie(self::$cookiePassword, $randomPassword, time() + $aDay);
+        return new UserCredentials($username, $randomPassword);
     }
 
     /**
@@ -60,6 +77,7 @@ class LoginView implements IView
      */
     public function response()
     {
+        echo time() + 86400;
         $message = $this->getFormMessage();
 
         if ($this->state->isAuthenticated()) {
@@ -113,6 +131,7 @@ class LoginView implements IView
 
     private function getFormMessage(): string
     {
+        echo $this->state->keepLoggedIn() ? 'Yes' : 'No';
         if ($this->loginFailed()) {
             $message = "Wrong name or password";
 

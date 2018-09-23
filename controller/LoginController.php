@@ -19,6 +19,7 @@ class LoginController
         $this->sessionState = $sessionState;
         $this->handleLogin();
         $this->handleLogout();
+        $this->handleCookie();
     }
 
     private function handleLogin(): void
@@ -28,6 +29,7 @@ class LoginController
             if ($this->storage->authenticateUser($userCredentials)) {
                 $this->sessionState->setUsername($userCredentials->getUsername());
                 $this->sessionState->login();
+                $this->sessionState->setKeepLoggedIn($userCredentials->keepLoggedIn());
             }
             $nextState = new SessionState(
                 SessionState::$POST_LOGIN,
@@ -46,6 +48,15 @@ class LoginController
         } else if ($this->view->shouldLogout()) {
             $nextState = new SessionState(SessionState::$PRE_LOGIN, "", false);
             $this->storage->saveToSession($nextState);
+        }
+    }
+
+    private function handleCookie(): void
+    {
+
+        if ($this->view->shouldSaveCookie()) {
+            $cookie = $this->view->getCookieData();
+            $this->storage->saveCookie($cookie);
         }
     }
 }

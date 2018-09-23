@@ -26,6 +26,8 @@ require_once 'model/Database.php';
 //MAKE SURE ERRORS ARE SHOWN... MIGHT WANT TO TURN THIS OFF ON A PUBLIC SERVER
 error_reporting(E_ALL);
 ini_set('display_errors', 'On');
+ini_set('session.use_only_cookies', true);
+ini_set('session.use_trans_sid', false);
 
 // TODO: Add try catch
 $main = new \controller\MainController();
