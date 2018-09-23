@@ -21,6 +21,13 @@ class Database
         return password_verify($password, $dbPassword) && $username === $dbUsername;
     }
 
+    public function saveCookie(): void
+    {
+        $this->connect();
+
+        $this->insertTo("cookies", $username, $password);
+    }
+
     public function saveUser(string $username, string $password)
     {
         $this->connect();
@@ -29,12 +36,7 @@ class Database
             throw new \Exception("User exists, pick another username.");
         }
 
-        $stmt = $this->prepareStatement(
-            "INSERT INTO users (username, password) VALUES (?, ?);"
-        );
-
-        mysqli_stmt_bind_param($stmt, "ss", $username, $password);
-        mysqli_stmt_execute($stmt);
+        $this->insertTo("users", $username, $password);
     }
 
     private function isUsernameTaken(string $username): bool
@@ -95,5 +97,23 @@ class Database
                 $port
             );
         }
+    }
+
+    /**
+     * Insert to provided table
+     *
+     * @param string $where the name of the table
+     * @param string $username of the user
+     * @param string $password of the user
+     * @return void
+     */
+    private function insertTo(string $where, string $username, string $password): void
+    {
+        $stmt = $this->prepareStatement(
+            "INSERT INTO " . $where . " (username, password) VALUES (?, ?);"
+        );
+
+        mysqli_stmt_bind_param($stmt, "ss", $username, $password);
+        mysqli_stmt_execute($stmt);
     }
 }
