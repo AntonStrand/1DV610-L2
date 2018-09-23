@@ -8,10 +8,11 @@ class SessionState
     private $status;
     private $username;
 
-    public static $NEW_USER = 'NEW_USER';
-    public static $FIRST_LOGIN = 'FIRST_LOGIN';
-    public static $POST_LOGIN = 'POST_LOGIN';
-    public static $PRE_LOGIN = 'PRE_LOGIN';
+    public static $NEW_USER = "NEW_USER";
+    public static $FIRST_LOGIN = "FIRST_LOGIN";
+    public static $POST_LOGIN = "POST_LOGIN";
+    public static $PRE_LOGIN = "PRE_LOGIN";
+    public static $LOGOUT = "LOGOUT";
 
     public function __construct(string $status, string $username = "", bool $isAuth = false)
     {
@@ -44,7 +45,7 @@ class SessionState
     public function logout(): void
     {
         $this->isAuthenticated = false;
-        $this->status = self::$PRE_LOGIN;
+        $this->status = self::$LOGOUT;
     }
 
     public function isAuthenticated(): bool
@@ -59,7 +60,12 @@ class SessionState
 
     public function isFirstLogout(): bool
     {
-        return !$this->isAuthenticated();
+        return $this->status === self::$LOGOUT;
+    }
+
+    public function isNewUser(): bool
+    {
+        return $this->status === self::$NEW_USER;
     }
 
 }

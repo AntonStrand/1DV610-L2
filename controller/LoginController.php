@@ -27,23 +27,25 @@ class LoginController
             $userCredentials = $this->view->getUserCredentials();
             if ($this->storage->authenticateUser($userCredentials)) {
                 $this->sessionState->setUsername($userCredentials->getUsername());
-                // $this->sessionState->setStatus(SessionState::$FIRST_LOGIN);
                 $this->sessionState->login();
             }
-            $state = new SessionState(
+            $nextState = new SessionState(
                 SessionState::$POST_LOGIN,
                 $userCredentials->getUsername(),
                 true
             );
-            $this->storage->saveToSession($state);
+            $this->storage->saveToSession($nextState);
         }
     }
 
     private function handleLogout(): void
     {
-        if ($this->view->shouldLogout()) {
+        if ($this->view->shouldLogout() && $this->sessionState->isAuthenticated()) {
             $this->sessionState->logout();
             $this->storage->destroySession();
+        } else if ($this->view->shouldLogout()) {
+            $nextState = new SessionState(SessionState::$PRE_LOGIN, "", false);
+            $this->storage->saveToSession($nextState);
         }
     }
 }

@@ -122,6 +122,9 @@ class LoginView implements IView
         } else if ($this->state->isFirstLogout()) {
             $message = 'Bye bye!';
 
+        } else if ($this->state->isNewUser()) {
+            $message = "Registered new user.";
+
         } else if ($this->hasClickedLogin()) {
             $message = $this->getFormError();
 
