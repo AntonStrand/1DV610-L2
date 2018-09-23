@@ -41,7 +41,7 @@ class Session
         return $_SESSION[$name];
     }
 
-    public function set(string $name, string $value)
+    public function set(string $name, $value)
     {
         $_SESSION[$name] = $value;
     }

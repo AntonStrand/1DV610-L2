@@ -8,7 +8,6 @@ use \model\SessionState;
 class Storage
 {
     private static $SESSION_KEY = __NAMESPACE__ . __CLASS__ . "state";
-    // private static $SESSION_KEY_NEW_REG = __NAMESPACE__ . __CLASS__ . "state_new_reg";
     private $session;
     private $db;
 
@@ -33,10 +32,6 @@ class Storage
             return new SessionState($this->session->get(self::$SESSION_KEY), true, $reloads);
         }
 
-        // if ($this->session->has(self::$SESSION_KEY_NEW_REG)) {
-        //     return new SessionState($this->session->get(self::$SESSION_KEY_NEW_REG), false, $reloads);
-        // }
-
         return new SessionState('', false, $reloads);
     }
 
@@ -45,7 +40,6 @@ class Storage
         if ($this->authenticateUser($user)) {
             $this->session->set(self::$SESSION_KEY, $user->getUsername());
         }
-        // $this->session->set(self::$SESSION_KEY_NEW_REG, $user->getUsername());
     }
 
     public function saveUser(UserCredentials $user): void
