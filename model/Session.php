@@ -27,7 +27,7 @@ class Session
         return unserialize($_SESSION[$name]);
     }
 
-    public function set(string $name, $value)
+    public function set(string $name, SessionState $value)
     {
         $_SESSION[$name] = serialize($value);
     }
