@@ -24,18 +24,9 @@ class Storage
 
     public function getSessionState(): SessionState
     {
-        // TODO: Test if there is a matching user or return a new user.
-        if ($this->session->has(self::$SESSION_KEY)) {
-            $prevState = $this->session->get(self::$SESSION_KEY);
-
-            // if ($prevState->getStatus() === SessionState::$FIRST_LOGIN) {
-            //     return new SessionState(SessionState::$POST_LOGIN, $prevState->getUsername(), true);
-            // }
-
-            return $prevState;
-        }
-
-        return new SessionState(SessionState::$PRE_LOGIN);
+        return $this->session->has(self::$SESSION_KEY)
+        ? $this->session->get(self::$SESSION_KEY)
+        : new SessionState(SessionState::$PRE_LOGIN);
     }
 
     public function saveToSession(SessionState $state): void
@@ -45,15 +36,17 @@ class Storage
 
     public function saveUser(UserCredentials $user): void
     {
-        $username = $user->getUsername();
-        $password = password_hash($user->getPassword(), PASSWORD_BCRYPT);
-
-        $this->db->saveUser($username, $password);
+        $this->db->saveUser($user);
     }
 
     public function saveCookie(UserCredentials $cookie)
     {
         $this->db->saveCookie($cookie);
+    }
+
+    public function isValidCookie(UserCredentials $cookie): bool
+    {
+        return $this->db->isValidCookie($cookie);
     }
 
     public function destroySession(): void

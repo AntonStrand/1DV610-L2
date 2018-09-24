@@ -8,6 +8,7 @@ class SessionState
     private $status;
     private $username;
     private $keepLoggedIn;
+    private $isUsingCookies;
 
     public static $NEW_USER = "NEW_USER";
     public static $FIRST_LOGIN = "FIRST_LOGIN";
@@ -21,6 +22,17 @@ class SessionState
         $this->isAuthenticated = $isAuth;
         $this->status = $status;
         $this->keepLoggedIn = $keepLoggedIn;
+        $this->isUsingCookies = false;
+    }
+
+    public function useCookies(): void
+    {
+        $this->isUsingCookies = true;
+    }
+
+    public function isUsingCookies(): bool
+    {
+        return $this->isUsingCookies;
     }
 
     public function setUsername(string $newName)
@@ -33,11 +45,6 @@ class SessionState
         return $this->username;
     }
 
-    public function getStatus(): String
-    {
-        return $this->status;
-    }
-
     public function login(): void
     {
         $this->isAuthenticated = true;
@@ -47,6 +54,7 @@ class SessionState
     public function logout(): void
     {
         $this->isAuthenticated = false;
+        $this->keepLoggedIn = false;
         $this->status = self::$LOGOUT;
     }
 

@@ -4,6 +4,7 @@ namespace controller;
 
 use \model\SessionState;
 use \model\Storage;
+use \model\UserCredentials;
 use \view\LoginView;
 
 class LoginController
@@ -19,7 +20,8 @@ class LoginController
         $this->sessionState = $sessionState;
         $this->handleLogin();
         $this->handleLogout();
-        $this->handleCookie();
+        $this->handleSavingCookie();
+        $this->handleLoginByCookie();
     }
 
     private function handleLogin(): void
@@ -27,36 +29,60 @@ class LoginController
         if ($this->view->shouldLogin() && !$this->sessionState->isAuthenticated()) {
             $userCredentials = $this->view->getUserCredentials();
             if ($this->storage->authenticateUser($userCredentials)) {
-                $this->sessionState->setUsername($userCredentials->getUsername());
-                $this->sessionState->login();
-                $this->sessionState->setKeepLoggedIn($userCredentials->keepLoggedIn());
+                $this->login($userCredentials);
             }
-            $nextState = new SessionState(
-                SessionState::$POST_LOGIN,
-                $userCredentials->getUsername(),
-                true
-            );
-            $this->storage->saveToSession($nextState);
         }
     }
 
     private function handleLogout(): void
     {
-        if ($this->view->shouldLogout() && $this->sessionState->isAuthenticated()) {
-            $this->sessionState->logout();
-            $this->storage->destroySession();
-        } else if ($this->view->shouldLogout()) {
-            $nextState = new SessionState(SessionState::$PRE_LOGIN, "", false);
+        if ($this->view->shouldLogout()) {
+            if ($this->sessionState->isAuthenticated()) {
+                $this->view->removeCookie();
+                $this->sessionState->logout();
+                $this->storage->destroySession();
+            }
+            $nextState = new SessionState(SessionState::$PRE_LOGIN, "", false, false);
             $this->storage->saveToSession($nextState);
         }
     }
 
-    private function handleCookie(): void
+    private function handleSavingCookie(): void
     {
-
         if ($this->view->shouldSaveCookie()) {
             $cookie = $this->view->getCookieData();
             $this->storage->saveCookie($cookie);
         }
+    }
+
+    private function handleLoginByCookie(): void
+    {
+        if ($this->view->shouldLoginByCookie()) {
+            $cookie = $this->view->getCookieData();
+            $this->sessionState->useCookies();
+            if ($this->storage->isValidCookie($cookie)) {
+                $this->login($cookie);
+            }
+        }
+    }
+
+    private function login(UserCredentials $userCredentials): void
+    {
+        if ($userCredentials->keepLoggedIn()) {
+            $this->view->setCookie();
+        }
+
+        $this->sessionState->setUsername($userCredentials->getUsername());
+        $this->sessionState->login();
+        $this->sessionState->setKeepLoggedIn($userCredentials->keepLoggedIn());
+
+        $nextState = new SessionState(
+            SessionState::$POST_LOGIN,
+            $userCredentials->getUsername(),
+            true,
+            $userCredentials->keepLoggedIn()
+        );
+
+        $this->storage->saveToSession($nextState);
     }
 }

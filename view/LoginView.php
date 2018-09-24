@@ -32,7 +32,7 @@ class LoginView implements IView
 
     public function shouldLogin(): bool
     {
-        return $this->hasClickedLogin() && $this->isInputValid();
+        return $this->hasClickedLogin() && $this->isInputValid() && !$this->state->isFirstLogout();
     }
 
     public function shouldLogout(): bool
@@ -53,23 +53,32 @@ class LoginView implements IView
 
     public function shouldSaveCookie(): bool
     {
-        return $this->state->isAuthenticated() && $this->state->keepLoggedIn();
+        return $this->state->isFirstLogin() && $this->state->keepLoggedIn();
+    }
+
+    public function shouldLoginByCookie(): bool
+    {
+        return !$this->state->isAuthenticated() && $this->isCookieSet();
+    }
+
+    public function removeCookie(): void
+    {
+        $expires = time() - 100;
+        \setcookie(self::$cookieName, null, $expires, "/", "", "", true);
+        \setcookie(self::$cookiePassword, null, $expires, "/", "", "", true);
+
+        // To remove the cookies during this request.
+        $_COOKIE[self::$cookieName] = null;
+        $_COOKIE[self::$cookiePassword] = null;
     }
 
     public function getCookieData(): UserCredentials
     {
-        if (!$this->shouldSaveCookie()) {
-            throw new Exception("The cookie should not be saved");
-        }
-
         if ($this->isCookieSet()) {
             $username = $_COOKIE[self::$cookieName];
             $password = $_COOKIE[self::$cookiePassword];
             return new UserCredentials($username, $password);
         }
-
-        $this->setCookie();
-        return $this->getCookieData();
     }
 
     /**
@@ -81,10 +90,6 @@ class LoginView implements IView
      */
     public function response()
     {
-        if ($this->shouldSaveCookie()) {
-            $this->setCookie();
-        }
-
         $message = $this->getFormMessage();
 
         if ($this->state->isAuthenticated()) {
@@ -101,13 +106,17 @@ class LoginView implements IView
         return isset($_COOKIE[self::$cookieName]) && isset($_COOKIE[self::$cookiePassword]);
     }
 
-    private function setCookie(): viod
+    public function setCookie(): void
     {
         $expires = time() + 86400;
-        $username = $this->$state->getUsername();
-        $randomPassword = bin2hex(random_bytes(20));
-        setcookie(self::$cookieName, $username, $expires);
-        setcookie(self::$cookiePassword, $randomPassword, $expires);
+        $username = $this->getUsername();
+        $password = bin2hex(random_bytes(20));
+        \setcookie(self::$cookieName, $username, $expires, "/", "", "", true);
+        \setcookie(self::$cookiePassword, $password, $expires, "/", "", "", true);
+
+        // To make the cookie available during this request.
+        $_COOKIE[self::$cookieName] = $username;
+        $_COOKIE[self::$cookiePassword] = $password;
     }
 
     /**
@@ -153,9 +162,14 @@ class LoginView implements IView
 
     private function getFormMessage(): string
     {
-        echo $this->state->keepLoggedIn() ? 'Yes' : 'No';
-        if ($this->loginFailed()) {
+        if (!$this->state->isAuthenticated() && $this->state->isUsingCookies()) {
+            $message = "Wrong information in cookies";
+
+        } else if ($this->loginFailed()) {
             $message = "Wrong name or password";
+
+        } else if ($this->state->isFirstLogin() && $this->state->isUsingCookies()) {
+            $message = "Welcome back with cookie";
 
         } else if ($this->state->isFirstLogin() && $this->keepLoggedIn()) {
             $message = "Welcome and you will be remembered";

@@ -8,12 +8,57 @@ class Database
 
     public function isCorrectUserCredentials(UserCredentials $user): bool
     {
+        return $this->isValidCredentials("users", $user);
+    }
+
+    public function isValidCookie(UserCredentials $cookie): bool
+    {
+        return $this->isValidCredentials("cookies", $cookie);
+    }
+
+    public function saveCookie(UserCredentials $cookie): void
+    {
+        $this->connect();
+        $username = $cookie->getUsername();
+        $password = password_hash($cookie->getPassword(), PASSWORD_BCRYPT);
+
+        $stmt = $this->prepareStatement(
+            "INSERT INTO cookies (username, password) VALUES (?, ?)
+            ON DUPLICATE KEY UPDATE
+            username=VALUES(username),
+            password=VALUES(password);"
+        );
+
+        mysqli_stmt_bind_param($stmt, "ss", $username, $password);
+        mysqli_stmt_execute($stmt);
+    }
+
+    public function saveUser(UserCredentials $user): void
+    {
+        $this->connect();
+        $username = $user->getUsername();
+        $password = password_hash($user->getPassword(), PASSWORD_BCRYPT);
+
+        if ($this->isUsernameTaken($username)) {
+            throw new \Exception("User exists, pick another username.");
+        }
+
+        $stmt = $this->prepareStatement(
+            "INSERT INTO users (username, password) VALUES (?, ?);"
+        );
+
+        mysqli_stmt_bind_param($stmt, "ss", $username, $password);
+        mysqli_stmt_execute($stmt);
+    }
+
+    private function isValidCredentials(string $tableName, UserCredentials $credentials): bool
+    {
         $this->connect();
 
-        $username = $user->getUsername();
-        $password = $user->getPassword();
+        $username = $credentials->getUsername();
+        $password = $credentials->getPassword();
 
-        $userData = mysqli_fetch_assoc($this->getUser($username));
+        $userData = mysqli_fetch_assoc($this->getUser($tableName, $username));
 
         $dbUsername = $userData["username"];
         $dbPassword = $userData["password"];
@@ -21,49 +66,22 @@ class Database
         return password_verify($password, $dbPassword) && $username === $dbUsername;
     }
 
-    public function saveCookie(UserCredentials $cookie): void
-    {
-        $this->connect();
-        $username = $cookie->getUsername();
-        $password = $cookie->getPassword();
-        $this->insertTo("cookies", $username, $password);
-    }
-
-    public function saveUser(string $username, string $password)
-    {
-        $this->connect();
-
-        if ($this->isUsernameTaken($username)) {
-            throw new \Exception("User exists, pick another username.");
-        }
-
-        $this->insertTo("users", $username, $password);
-    }
-
     private function isUsernameTaken(string $username): bool
     {
-        return mysqli_num_rows($this->getUser($username)) > 0;
+        return mysqli_num_rows($this->getUser("users", $username)) > 0;
     }
 
-    private function getUser(string $username): object
+    private function getUser(string $tableName, string $username): object
     {
         $stmt = $this->prepareStatement(
-            "SELECT * FROM users WHERE username=?;"
+            "SELECT * FROM " . $tableName . " WHERE username=?;"
         );
 
         mysqli_stmt_bind_param($stmt, "s", $username);
-
         mysqli_stmt_execute($stmt);
-
         return mysqli_stmt_get_result($stmt);
     }
 
-    /**
-     * Prepares and returns mysql statement.
-     *
-     * @param string $sql
-     * @return object(mysqli_stmt)
-     */
     private function prepareStatement(string $sql): object
     {
         $stmt = mysqli_stmt_init($this->conn);
@@ -98,24 +116,5 @@ class Database
                 $port
             );
         }
-    }
-
-    /**
-     * Insert to provided table
-     *
-     * @param string $table the name of the table
-     * @param string $username of the user
-     * @param string $password of the user
-     * @return void
-     */
-    private function insertTo(string $table, string $username, string $password): void
-    {
-        echo $username . " " . $password;
-        $stmt = $this->prepareStatement(
-            "INSERT INTO " . $table . " (username, password) VALUES (?, ?);"
-        );
-
-        mysqli_stmt_bind_param($stmt, "ss", $username, $password);
-        mysqli_stmt_execute($stmt);
     }
 }
