@@ -8,6 +8,7 @@ use \model\SessionState;
 class Storage
 {
     private static $SESSION_KEY = __NAMESPACE__ . __CLASS__ . "state";
+    private static $SESSION_SECRET = __NAMESPACE__ . __CLASS__ . "secret";
     private $session;
     private $db;
 
@@ -22,11 +23,23 @@ class Storage
         return $this->db->isCorrectUserCredentials($user);
     }
 
+    public function setSessionSecret(): void
+    {
+        $this->session->set(self::$SESSION_SECRET, $this->getSecretString());
+    }
+
     public function getSessionState(): SessionState
     {
-        return $this->session->has(self::$SESSION_KEY)
-        ? $this->session->get(self::$SESSION_KEY)
-        : new SessionState(SessionState::$PRE_LOGIN);
+        if ($this->session->has(self::$SESSION_KEY)) {
+            $state = $this->session->get(self::$SESSION_KEY);
+            if ($state->isAuthenticated() && $this->session->has(self::$SESSION_SECRET) && $this->session->get(self::$SESSION_SECRET) == $this->getSecretString()) {
+                return $state;
+            } else if (!$state->isAuthenticated()) {
+                return $state;
+            }
+        }
+
+        return new SessionState(SessionState::$PRE_LOGIN);
     }
 
     public function saveToSession(SessionState $state): void
@@ -52,5 +65,10 @@ class Storage
     public function destroySession(): void
     {
         $this->session->destroy();
+    }
+
+    private function getSecretString(): string
+    {
+        return md5($_SERVER["HTTP_USER_AGENT"] . self::$SESSION_SECRET);
     }
 }

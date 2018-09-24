@@ -60,6 +60,7 @@ class LoginController
         if ($this->view->shouldLoginByCookie()) {
             $cookie = $this->view->getCookieData();
             $this->sessionState->useCookies();
+
             if ($this->storage->isValidCookie($cookie)) {
                 $this->login($cookie);
             }
@@ -72,6 +73,7 @@ class LoginController
             $this->view->setCookie();
         }
 
+        $this->storage->setSessionSecret();
         $this->sessionState->setUsername($userCredentials->getUsername());
         $this->sessionState->login();
         $this->sessionState->setKeepLoggedIn($userCredentials->keepLoggedIn());

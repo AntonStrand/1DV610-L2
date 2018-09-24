@@ -22,12 +22,12 @@ class Session
         return isset($_SESSION[$name]);
     }
 
-    public function get(string $name): SessionState
+    public function get(string $name)
     {
         return unserialize($_SESSION[$name]);
     }
 
-    public function set(string $name, SessionState $value)
+    public function set(string $name, $value)
     {
         $_SESSION[$name] = serialize($value);
     }
