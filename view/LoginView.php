@@ -58,14 +58,18 @@ class LoginView implements IView
 
     public function getCookieData(): UserCredentials
     {
-        $state = $this->state;
-        $username = $state->getUsername();
+        if (!$this->shouldSaveCookie()) {
+            throw new Exception("The cookie should not be saved");
+        }
 
-        $aDay = 86400;
-        $randomPassword = bin2hex(random_bytes(20));
-        setcookie(self::$cookieName, $username, time() + $aDay);
-        setcookie(self::$cookiePassword, $randomPassword, time() + $aDay);
-        return new UserCredentials($username, $randomPassword);
+        if ($this->isCookieSet()) {
+            $username = $_COOKIE[self::$cookieName];
+            $password = $_COOKIE[self::$cookiePassword];
+            return new UserCredentials($username, $password);
+        }
+
+        $this->setCookie();
+        return $this->getCookieData();
     }
 
     /**
@@ -77,7 +81,10 @@ class LoginView implements IView
      */
     public function response()
     {
-        echo time() + 86400;
+        if ($this->shouldSaveCookie()) {
+            $this->setCookie();
+        }
+
         $message = $this->getFormMessage();
 
         if ($this->state->isAuthenticated()) {
@@ -88,6 +95,21 @@ class LoginView implements IView
 
         return $response;
     }
+
+    private function isCookieSet(): bool
+    {
+        return isset($_COOKIE[self::$cookieName]) && isset($_COOKIE[self::$cookiePassword]);
+    }
+
+    private function setCookie(): viod
+    {
+        $expires = time() + 86400;
+        $username = $this->$state->getUsername();
+        $randomPassword = bin2hex(random_bytes(20));
+        setcookie(self::$cookieName, $username, $expires);
+        setcookie(self::$cookiePassword, $randomPassword, $expires);
+    }
+
     /**
      * Generate HTML code on the output buffer for the logout button
      * @param $message, String output message
