@@ -48,8 +48,6 @@ class MainController
                 $this->loginView,
                 $this->dateTimeView
             );
-
         }
-
     }
 }
