@@ -101,19 +101,12 @@ class Database
     private function connect(): void
     {
         if (!$this->isConnected()) {
-            //TODO: seperate settings to a env file
-            $user = 'root';
-            $password = 'root';
-            $db = '1dv610';
-            $host = 'localhost';
-            $port = 8889;
-
             $this->conn = mysqli_connect(
-                $host,
-                $user,
-                $password,
-                $db,
-                $port
+                \Settings::$HOST,
+                \Settings::$USER,
+                \Settings::$PASSWORD,
+                \Settings::$DB,
+                \Settings::$PORT
             );
         }
     }

@@ -24,6 +24,8 @@ require_once 'model/Storage.php';
 require_once 'model/Session.php';
 require_once 'model/Database.php';
 
+require_once 'Settings.php';
+
 ini_set('session.use_only_cookies', true);
 ini_set('session.use_trans_sid', false);
 
