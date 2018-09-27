@@ -105,8 +105,8 @@ class Database
                 \Settings::$HOST,
                 \Settings::$USER,
                 \Settings::$PASSWORD,
-                \Settings::$DB,
-                \Settings::$PORT
+                \Settings::$DB
+                // \Settings::$PORT
             );
         }
     }

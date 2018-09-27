@@ -42,6 +42,5 @@ class Settings
     public static $USER = 'user';
     public static $PASSWORD = 'password';
     public static $DB = 'dbName';
-    public static $PORT = 'NNNN';
 }
 ```
