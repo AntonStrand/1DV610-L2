@@ -106,7 +106,6 @@ class Database
                 \Settings::$USER,
                 \Settings::$PASSWORD,
                 \Settings::$DB
-                // \Settings::$PORT
             );
         }
     }
