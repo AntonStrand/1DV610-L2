@@ -25,7 +25,7 @@ CREATE TABLE `users` (
 ```SQL
 CREATE TABLE `cookies` (
   `id` int(11) NOT NULL,
-  `username` varchar(128) NOT NULL,
+  `username` varchar(128) NOT NULL UNIQUE,
   `password` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 ```
