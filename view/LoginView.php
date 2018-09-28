@@ -206,7 +206,7 @@ class LoginView implements IView
         try {
             $this->getUserCredentials();
         } catch (Exception $e) {
-            return $e->getMessage();
+            return "Wrong name or password";
         }
 
         return '';
