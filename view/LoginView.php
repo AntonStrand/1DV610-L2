@@ -102,7 +102,8 @@ class LoginView implements IView
 
     public function setCookie(): void
     {
-        $expires = time() + 86400;
+        $aDayInSeconds = 86400;
+        $expires = time() + $aDayInSeconds;
         $username = $this->getUsername();
         $password = bin2hex(random_bytes(20));
         \setcookie(self::$cookieName, $username, $expires, "/", "", "", true);
