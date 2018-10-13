@@ -235,6 +235,7 @@ class LoginView implements IView
     {
         return isset($_POST[self::$name]) && !empty($this->cleanInput($this->getRequestUsername()));
     }
+
     private function hasPassword(): bool
     {
         return isset($_POST[self::$password]) && !empty($this->cleanInput($this->getRequestPassword()));
