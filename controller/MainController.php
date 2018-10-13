@@ -34,7 +34,7 @@ class MainController
 
     public function route(): void
     {
-        if ($this->loginView->wantsToRegister()) {
+        if ($this->layoutView->wantsToRegister()) {
             new RegisterController($this->registerView, $this->storage, $this->state);
             $this->layoutView->render(
                 false,

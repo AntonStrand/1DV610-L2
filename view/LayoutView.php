@@ -4,6 +4,8 @@ namespace view;
 
 class LayoutView
 {
+    private static $register = 'register';
+
     public function render($isLoggedIn, IView $v, DateTimeView $dtv)
     {
         echo '<!DOCTYPE html>
@@ -25,6 +27,11 @@ class LayoutView
          </body>
       </html>
     ';
+    }
+
+    public function wantsToRegister(): bool
+    {
+        return isset($_GET[self::$register]);
     }
 
     private function renderIsLoggedIn($isLoggedIn)
