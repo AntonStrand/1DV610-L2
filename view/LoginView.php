@@ -48,9 +48,7 @@ class LoginView implements IView
 
     public function shouldSaveCookie(): bool
     {
-        // TODO: Implemenent another solution
-        // return $this->state->keepLoggedIn();
-        return false;
+        return $this->keepLoggedIn();
     }
 
     public function shouldLoginByCookie(): bool
@@ -80,14 +78,24 @@ class LoginView implements IView
 
     public function useDefaultWelcomeMessage(): void
     {
-        $this->message = "Welcome";
+        $this->message = $this->keepLoggedIn()
+        ? "Welcome and you will be remembered"
+        : "Welcome";
     }
 
     public function useLoginByCookieMessage(): void
     {
-        $this->message = $this->state->isAuthenticated()
-        ? "Welcome back with cookie"
-        : "Wrong information in cookies";
+        $this->message = "Welcome back with cookie";
+    }
+
+    public function useCookieErrorMessage(): void
+    {
+        $this->message = "Wrong information in cookies";
+    }
+
+    public function useLoginFailedMessage(): void
+    {
+        $this->message = "Wrong name or password";
     }
 
     public function useLogoutMessage(): void
@@ -104,7 +112,7 @@ class LoginView implements IView
      */
     public function response()
     {
-        $message = $this->message ? $this->message : $this->getFormMessage();
+        $message = $this->getMessage();
 
         return $this->state->isAuthenticated()
         ? $this->generateLogoutButtonHTML($message)
@@ -171,25 +179,21 @@ class LoginView implements IView
 		';
     }
 
-    private function getFormMessage(): string
+    private function getMessage(): string
     {
-        if ($this->loginFailed()) {
-            $message = "Wrong name or password";
-
-        } else if ($this->state->isAuthenticated() && $this->keepLoggedIn()) {
-            $message = "Welcome and you will be remembered";
-
-        } else if (!$this->state->isAuthenticated() && $this->state->hasUsername()) {
-            $message = "Registered new user.";
-
-        } else if ($this->hasClickedLogin()) {
-            $message = $this->getFormError();
-
-        } else {
-            $message = "";
+        if ($this->message != null) {
+            return $this->message;
         }
 
-        return $message;
+        if (!$this->state->isAuthenticated() && $this->state->hasUsername()) {
+            return "Registered new user.";
+        }
+
+        if ($this->hasClickedLogin()) {
+            return $this->getFormError();
+        }
+
+        return "";
     }
 
     private function getFormError(): string

@@ -30,6 +30,8 @@ class LoginController
             $userCredentials = $this->view->getUserCredentials();
             if ($this->storage->authenticateUser($userCredentials)) {
                 $this->login($userCredentials);
+            } else {
+                $this->view->useLoginFailedMessage();
             }
         }
     }
@@ -59,11 +61,12 @@ class LoginController
     {
         if ($this->view->shouldLoginByCookie()) {
             $cookie = $this->view->getCookieData();
-            $this->sessionState->useCookies();
 
             if ($this->storage->isValidCookie($cookie)) {
                 $this->login($cookie);
                 $this->view->useLoginByCookieMessage();
+            } else {
+                $this->view->useCookieErrorMessage();
             }
         }
     }
@@ -79,8 +82,7 @@ class LoginController
 
         $nextState = new SessionState(
             $userCredentials->getUsername(),
-            true,
-            $userCredentials->keepLoggedIn()
+            true
         );
 
         $this->storage->saveToSession($nextState);
