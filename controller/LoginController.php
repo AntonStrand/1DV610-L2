@@ -30,6 +30,7 @@ class LoginController
             $userCredentials = $this->view->getUserCredentials();
             if ($this->storage->authenticateUser($userCredentials)) {
                 $this->login($userCredentials);
+                $this->view->useDefaultWelcomeMessage();
             } else {
                 $this->view->useLoginFailedMessage();
             }
@@ -79,13 +80,6 @@ class LoginController
 
         $this->storage->setSessionSecret();
         $this->sessionState->loginAs($userCredentials->getUsername());
-
-        $nextState = new SessionState(
-            $userCredentials->getUsername(),
-            true
-        );
-
-        $this->storage->saveToSession($nextState);
-        $this->view->useDefaultWelcomeMessage();
+        $this->storage->saveToSession($this->sessionState);
     }
 }
