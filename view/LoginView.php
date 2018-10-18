@@ -26,7 +26,7 @@ class LoginView implements IView
 
     public function shouldLogin(): bool
     {
-        return $this->hasClickedLogin() && $this->isInputValid() && !$this->state->isFirstLogout();
+        return $this->hasClickedLogin() && $this->isInputValid() && !$this->state->isAuthenticated();
     }
 
     public function shouldLogout(): bool
@@ -47,7 +47,7 @@ class LoginView implements IView
 
     public function shouldSaveCookie(): bool
     {
-        return $this->state->isFirstLogin() && $this->state->keepLoggedIn();
+        return $this->state->keepLoggedIn();
     }
 
     public function shouldLoginByCookie(): bool
@@ -157,25 +157,27 @@ class LoginView implements IView
 
     private function getFormMessage(): string
     {
+        echo $this->state->isAuthenticated() ? 'logged in' : 'Not logged in';
+        echo $this->hasClickedLogout() ? 'has clicked' : 'has not';
         if (!$this->state->isAuthenticated() && $this->state->isUsingCookies()) {
             $message = "Wrong information in cookies";
 
         } else if ($this->loginFailed()) {
             $message = "Wrong name or password";
 
-        } else if ($this->state->isFirstLogin() && $this->state->isUsingCookies()) {
+        } else if ($this->state->isUsingCookies()) {
             $message = "Welcome back with cookie";
 
-        } else if ($this->state->isFirstLogin() && $this->keepLoggedIn()) {
+        } else if ($this->keepLoggedIn()) {
             $message = "Welcome and you will be remembered";
 
-        } else if ($this->state->isFirstLogin()) {
+        } else if ($this->state->isAuthenticated()) {
             $message = "Welcome";
 
-        } else if ($this->state->isFirstLogout()) {
+        } else if (!$this->state->isAuthenticated() && $this->hasClickedLogout() && $this->state->hasUsername()) {
             $message = "Bye bye!";
 
-        } else if ($this->state->isNewUser()) {
+        } else if (!$this->state->isAuthenticated() && $this->state->hasUsername()) {
             $message = "Registered new user.";
 
         } else if ($this->hasClickedLogin()) {
@@ -273,8 +275,9 @@ class LoginView implements IView
 
     private function getUsername(): string
     {
-        $username = $this->state->getUsername();
-        return $username !== '' ? $username : $this->getRequestUsername();
+        return $this->state->hasUsername()
+        ? $this->state->getUsername()
+        : $this->getRequestUsername();
     }
 
     private function loginFailed(): bool

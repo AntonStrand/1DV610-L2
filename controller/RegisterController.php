@@ -28,7 +28,6 @@ class RegisterController
                 $this->storage->saveUser($userCredentials);
 
                 $nextState = new SessionState(
-                    SessionState::$NEW_USER,
                     $userCredentials->getUsername()
                 );
 

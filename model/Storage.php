@@ -39,7 +39,7 @@ class Storage
             }
         }
 
-        return new SessionState(SessionState::$PRE_LOGIN);
+        return new SessionState();
     }
 
     public function saveToSession(SessionState $state): void

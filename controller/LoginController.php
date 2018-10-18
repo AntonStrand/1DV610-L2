@@ -19,9 +19,9 @@ class LoginController
         $this->storage = $storage;
         $this->sessionState = $sessionState;
         $this->handleLogin();
-        $this->handleLogout();
         $this->handleSavingCookie();
         $this->handleLoginByCookie();
+        $this->handleLogout();
     }
 
     private function handleLogin(): void
@@ -42,8 +42,7 @@ class LoginController
                 $this->sessionState->logout();
                 $this->storage->destroySession();
             }
-            $nextState = new SessionState(SessionState::$PRE_LOGIN, "", false, false);
-            $this->storage->saveToSession($nextState);
+            $this->storage->saveToSession(new SessionState());
         }
     }
 
@@ -75,11 +74,10 @@ class LoginController
 
         $this->storage->setSessionSecret();
         $this->sessionState->setUsername($userCredentials->getUsername());
-        $this->sessionState->login();
         $this->sessionState->setKeepLoggedIn($userCredentials->keepLoggedIn());
+        $this->sessionState->login();
 
         $nextState = new SessionState(
-            SessionState::$POST_LOGIN,
             $userCredentials->getUsername(),
             true,
             $userCredentials->keepLoggedIn()

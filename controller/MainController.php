@@ -34,6 +34,8 @@ class MainController
 
     public function route(): void
     {
+        echo $this->state->isAuthenticated() ? "Yes" : "No";
+
         if ($this->layoutView->wantsToRegister()) {
             new RegisterController($this->registerView, $this->storage, $this->state);
             $this->layoutView->render(
@@ -41,7 +43,16 @@ class MainController
                 $this->registerView,
                 $this->dateTimeView
             );
+        } else if (!$this->state->isAuthenticated()) {
+            //TODO: change order to see if it solves update problem
+            new LoginController($this->loginView, $this->storage, $this->state);
+            $this->layoutView->render(
+                $this->state->isAuthenticated(),
+                $this->loginView,
+                $this->dateTimeView
+            );
         } else {
+            echo "welcome";
             new LoginController($this->loginView, $this->storage, $this->state);
             $this->layoutView->render(
                 $this->state->isAuthenticated(),
