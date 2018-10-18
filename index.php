@@ -29,9 +29,13 @@ require_once 'Settings.php';
 ini_set('session.use_only_cookies', true);
 ini_set('session.use_trans_sid', false);
 
-try {
-    $main = new \controller\MainController();
-    $main->route();
-} catch (\Exception $e) {
-    new \view\Error500();
-}
+//MAKE SURE ERRORS ARE SHOWN... MIGHT WANT TO TURN THIS OFF ON A PUBLIC SERVER
+error_reporting(E_ALL);
+ini_set('display_errors', 'On');
+
+// try {
+$main = new \controller\MainController();
+$main->route();
+// } catch (\Exception $e) {
+//     new \view\Error500();
+// }
