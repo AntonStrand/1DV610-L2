@@ -17,6 +17,7 @@ class LoginView implements IView
     private static $keep = 'LoginView::KeepMeLoggedIn';
     private static $messageId = 'LoginView::Message';
 
+    private $message;
     private $state;
 
     public function __construct(SessionState $state)
@@ -47,7 +48,9 @@ class LoginView implements IView
 
     public function shouldSaveCookie(): bool
     {
-        return $this->state->keepLoggedIn();
+        // TODO: Implemenent another solution
+        // return $this->state->keepLoggedIn();
+        return false;
     }
 
     public function shouldLoginByCookie(): bool
@@ -75,6 +78,23 @@ class LoginView implements IView
         }
     }
 
+    public function useDefaultWelcomeMessage(): void
+    {
+        $this->message = "Welcome";
+    }
+
+    public function useLoginByCookieMessage(): void
+    {
+        $this->message = $this->state->isAuthenticated()
+        ? "Welcome back with cookie"
+        : "Wrong information in cookies";
+    }
+
+    public function useLogoutMessage(): void
+    {
+        $this->message = "Bye bye!";
+    }
+
     /**
      * Create HTTP response
      *
@@ -84,15 +104,11 @@ class LoginView implements IView
      */
     public function response()
     {
-        $message = $this->getFormMessage();
+        $message = $this->message ? $this->message : $this->getFormMessage();
 
-        if ($this->state->isAuthenticated()) {
-            $response = $this->generateLogoutButtonHTML($message);
-        } else {
-            $response = $this->generateLoginFormHTML($message);
-        }
-
-        return $response;
+        return $this->state->isAuthenticated()
+        ? $this->generateLogoutButtonHTML($message)
+        : $this->generateLoginFormHTML($message);
     }
 
     private function isCookieSet(): bool
@@ -157,23 +173,11 @@ class LoginView implements IView
 
     private function getFormMessage(): string
     {
-        if (!$this->state->isAuthenticated() && $this->state->isUsingCookies()) {
-            $message = "Wrong information in cookies";
-
-        } else if ($this->loginFailed()) {
+        if ($this->loginFailed()) {
             $message = "Wrong name or password";
 
-        } else if ($this->state->isUsingCookies()) {
-            $message = "Welcome back with cookie";
-
-        } else if ($this->keepLoggedIn()) {
+        } else if ($this->state->isAuthenticated() && $this->keepLoggedIn()) {
             $message = "Welcome and you will be remembered";
-
-        } else if ($this->state->isAuthenticated()) {
-            $message = "Welcome";
-
-        } else if (!$this->state->isAuthenticated() && $this->hasClickedLogout() && $this->state->hasUsername()) {
-            $message = "Bye bye!";
 
         } else if (!$this->state->isAuthenticated() && $this->state->hasUsername()) {
             $message = "Registered new user.";

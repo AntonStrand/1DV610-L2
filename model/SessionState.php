@@ -6,36 +6,17 @@ class SessionState
 {
     private $isAuthenticated;
     private $username;
-    private $keepLoggedIn;
-    private $isUsingCookies;
 
     // TODO: Use Username instead of string.
-    public function __construct(string $username = "", bool $isAuth = false, bool $keepLoggedIn = false)
+    public function __construct(string $username = null, bool $isAuth = false)
     {
-        $this->setUsername($username);
+        $this->username = $username;
         $this->isAuthenticated = $isAuth;
-        $this->keepLoggedIn = $keepLoggedIn;
-        $this->isUsingCookies = false;
-    }
-
-    public function useCookies(): void
-    {
-        $this->isUsingCookies = true;
-    }
-
-    public function isUsingCookies(): bool
-    {
-        return $this->isUsingCookies;
     }
 
     public function hasUsername(): bool
     {
-        return strlen($this->username) > 0;
-    }
-
-    public function setUsername(string $newName)
-    {
-        $this->username = $newName;
+        return $this->username != null;
     }
 
     public function getUsername(): string
@@ -43,29 +24,20 @@ class SessionState
         return $this->username;
     }
 
-    public function login(): void
+    public function loginAs(string $username): void
     {
+        $this->username = $username;
         $this->isAuthenticated = true;
     }
 
     public function logout(): void
     {
+        $this->username = "";
         $this->isAuthenticated = false;
-        $this->keepLoggedIn = false;
     }
 
     public function isAuthenticated(): bool
     {
         return $this->isAuthenticated;
-    }
-
-    public function setKeepLoggedIn(bool $shouldKeep): void
-    {
-        $this->keepLoggedIn = $shouldKeep;
-    }
-
-    public function keepLoggedIn(): bool
-    {
-        return $this->keepLoggedIn;
     }
 }

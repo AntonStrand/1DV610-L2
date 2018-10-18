@@ -41,16 +41,7 @@ class MainController
                 $this->registerView,
                 $this->dateTimeView
             );
-        } else if (!$this->state->isAuthenticated()) {
-            //TODO: change order to see if it solves update problem
-            new LoginController($this->loginView, $this->storage, $this->state);
-            $this->layoutView->render(
-                $this->state->isAuthenticated(),
-                $this->loginView,
-                $this->dateTimeView
-            );
         } else {
-            echo "welcome";
             new LoginController($this->loginView, $this->storage, $this->state);
             $this->layoutView->render(
                 $this->state->isAuthenticated(),

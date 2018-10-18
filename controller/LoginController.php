@@ -38,9 +38,10 @@ class LoginController
     {
         if ($this->view->shouldLogout()) {
             if ($this->sessionState->isAuthenticated()) {
-                $this->view->removeCookie();
                 $this->sessionState->logout();
                 $this->storage->destroySession();
+                $this->view->removeCookie();
+                $this->view->useLogoutMessage();
             }
             $this->storage->saveToSession(new SessionState());
         }
@@ -62,6 +63,7 @@ class LoginController
 
             if ($this->storage->isValidCookie($cookie)) {
                 $this->login($cookie);
+                $this->view->useLoginByCookieMessage();
             }
         }
     }
@@ -73,9 +75,7 @@ class LoginController
         }
 
         $this->storage->setSessionSecret();
-        $this->sessionState->setUsername($userCredentials->getUsername());
-        $this->sessionState->setKeepLoggedIn($userCredentials->keepLoggedIn());
-        $this->sessionState->login();
+        $this->sessionState->loginAs($userCredentials->getUsername());
 
         $nextState = new SessionState(
             $userCredentials->getUsername(),
@@ -84,5 +84,6 @@ class LoginController
         );
 
         $this->storage->saveToSession($nextState);
+        $this->view->useDefaultWelcomeMessage();
     }
 }
