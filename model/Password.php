@@ -44,6 +44,11 @@ class Password
         return $this->password;
     }
 
+    public function isSame(Password $testPassword): bool
+    {
+        return $this->password === $testPassword->getPassword();
+    }
+
     /**
      * Checks if the password is too short
      *

@@ -108,7 +108,7 @@ class RegisterView implements IView
             try {
                 $pwd1 = new \model\Password($this->getCleanedPassword());
                 $pwd2 = new \model\Password($this->getRepeatedPassword());
-                $isMatch = $pwd1->getPassword() === $pwd2->getPassword();
+                $isMatch = $pwd1->isSame($pwd2);
             } catch (\Exception $e) {
                 $isMatch = false;
             }
