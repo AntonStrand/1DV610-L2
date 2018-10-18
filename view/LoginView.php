@@ -157,8 +157,6 @@ class LoginView implements IView
 
     private function getFormMessage(): string
     {
-        echo $this->state->isAuthenticated() ? 'logged in' : 'Not logged in';
-        echo $this->hasClickedLogout() ? 'has clicked' : 'has not';
         if (!$this->state->isAuthenticated() && $this->state->isUsingCookies()) {
             $message = "Wrong information in cookies";
 

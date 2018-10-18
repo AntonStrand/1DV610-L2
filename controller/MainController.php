@@ -34,8 +34,6 @@ class MainController
 
     public function route(): void
     {
-        echo $this->state->isAuthenticated() ? "Yes" : "No";
-
         if ($this->layoutView->wantsToRegister()) {
             new RegisterController($this->registerView, $this->storage, $this->state);
             $this->layoutView->render(
