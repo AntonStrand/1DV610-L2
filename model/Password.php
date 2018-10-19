@@ -1,6 +1,8 @@
 <?php
 namespace Model;
 
+use \model\exception\password\TooShortException;
+
 class Password
 {
     private const MIN_LENGTH = 6;
@@ -29,7 +31,7 @@ class Password
     public function setPassword(string $password)
     {
         if ($this->isTooShort($password)) {
-            throw new \LengthException("Password has too few characters, at least " . self::MIN_LENGTH . " characters.");
+            throw new TooShortException("Password has too few characters, at least " . self::MIN_LENGTH . " characters.");
         }
         $this->password = $password;
     }

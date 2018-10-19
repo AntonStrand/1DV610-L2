@@ -1,6 +1,9 @@
 <?php
 namespace model;
 
+use \model\exception\username\InvalidCharactersException;
+use \model\exception\username\TooShortException;
+
 class Username
 {
     private const MIN_LENGTH = 3;
@@ -9,8 +12,8 @@ class Username
     /**
      * Create a new Username
      *
-     * @throws Exception "Username is missing" if the username is empty
-     * @throws Exception "Username has too few characters, at least 3 characters." if the username is too short
+     * @throws InvalidCharactersException if the username has invalid characters
+     * @throws TooShortException if the username is too short
      * @param string $username
      */
     public function __construct(string $username)
@@ -21,16 +24,21 @@ class Username
     /**
      * Update username
      *
-     * @throws Exception "Username is missing" if the username is empty
-     * @throws Exception "Username has too few characters, at least 3 characters." if the username is too short
+     * @throws InvalidCharactersException if the username has invalid characters
+     * @throws TooShortException if the username is too short
      * @param string $username
      * @return void
      */
     public function setUsername(string $username): void
     {
-        if ($this->isTooShort($username)) {
-            throw new \LengthException("Username has too few characters, at least " . self::MIN_LENGTH . " characters.");
+        if ($this->hasInvalidCharacters($username)) {
+            throw new InvalidCharactersException("The username has invalid characters");
         }
+
+        if ($this->isTooShort($username)) {
+            throw new TooShortException("Username has too few characters, at least " . self::MIN_LENGTH . " characters.");
+        }
+
         $this->username = $username;
     }
 
@@ -53,5 +61,10 @@ class Username
     private function isTooShort(string $username): bool
     {
         return strlen($username) < self::MIN_LENGTH;
+    }
+
+    private function hasInvalidCharacters(string $username): bool
+    {
+        return $username !== strip_tags($username);
     }
 }

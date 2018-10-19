@@ -40,7 +40,7 @@ class Database
         $password = password_hash($user->getPassword(), PASSWORD_BCRYPT);
 
         if ($this->isUsernameTaken($username)) {
-            throw new \Exception("User exists, pick another username.");
+            throw new \Exception("Username is taken");
         }
 
         $stmt = $this->prepareStatement(

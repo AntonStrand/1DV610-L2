@@ -12,7 +12,7 @@ class RegisterView implements IView
     private static $repeatPwd = 'RegisterView::PasswordRepeat';
     private static $messageId = 'RegisterView::Message';
 
-    private $dbError;
+    private $isUsernameTaken = false;
 
     public function shouldRegister(): bool
     {
@@ -23,22 +23,15 @@ class RegisterView implements IView
     {
         return new UserCredentials(
             $this->getCleanedUsername(),
-            $this->getCleanedPassword())
-        ;
+            $this->getCleanedPassword()
+        );
     }
 
-    public function showError(string $error): void
+    public function usernameIsTaken(): void
     {
-        $this->dbError = $error;
+        $this->isUsernameTaken = true;
     }
 
-    /**
-     * Create HTTP response
-     *
-     * Should be called when a register attempt has been determined
-     *
-     * @return string and writes to cookies!
-     */
     public function response(): string
     {
         return $this->generateRegisterFormHTML($this->getMessage());
@@ -53,51 +46,47 @@ class RegisterView implements IView
 
     private function getErrorMessages(): string
     {
-        $errorsAsString = '';
-        $errors = array();
-
-        # Test username
-        try {
-            $username = $this->getUsername();
-            $filtered = $this->getCleanedUsername();
-
-            if (strlen($username) === strlen($filtered)) {
-                new \model\Username($filtered);
-            } else {
-                $errors[] = 'Username contains invalid characters.';
-            }
-
-        } catch (\Exception $e) {
-            $errors[] = $e->getMessage();
+        if ($this->isUsernameTaken) {
+            return "User exists, pick another username.";
         }
 
-        # Test password
-        try {
-            new \model\Password($this->getCleanedPassword());
-        } catch (\Exception $e) {
-            $errors[] = $e->getMessage();
+        $errors = array_merge(
+            $this->getUsernameErrors(),
+            $this->getPasswordErrors()
+        );
+
+        if (count($errors) > 0) {
+            return implode("<br>", $errors);
         }
 
-        # Test matching password if no errors where found
-        if (count($errors) === 0 && !$this->isPasswordMatching()) {
-            $errors[] = 'Passwords do not match.';
+        if (!$this->isPasswordMatching()) {
+            return "Passwords do not match.";
         }
 
-        # Turn errors into a string
-        foreach ($errors as $error) {
-            $errorsAsString .= $error . '<br>';
-        }
-
-        if ($this->dbError !== null) {
-            $errorsAsString = $this->dbError;
-        }
-
-        return $errorsAsString;
     }
 
-    private function isValidInput(): bool
+    private function getUsernameErrors(): array
     {
-        return strlen($this->getErrorMessages()) === 0 && $this->isPasswordMatching();
+        $errors = array();
+        try {
+            new \model\Username(trim($this->getUsername()));
+        } catch (\model\exception\username\InvalidCharactersException $e) {
+            $errors[] = "Username contains invalid characters.";
+        } catch (\model\exception\username\TooShortException $e) {
+            $errors[] = "Username has too few characters, at least 3 characters.";
+        }
+        return $errors;
+    }
+
+    private function getPasswordErrors(): array
+    {
+        $errors = array();
+        try {
+            new \model\Password($this->getTrimmedPassword());
+        } catch (\model\exception\password\TooShortException $e) {
+            $errors[] = "Username has too few characters, at least 6 characters.";
+        }
+        return $errors;
     }
 
     private function isPasswordMatching(): bool
@@ -106,7 +95,7 @@ class RegisterView implements IView
 
         if ($this->hasPassword() && $this->hasRepeatedPassword()) {
             try {
-                $pwd1 = new \model\Password($this->getCleanedPassword());
+                $pwd1 = new \model\Password($this->getTrimmedPassword());
                 $pwd2 = new \model\Password($this->getRepeatedPassword());
                 $isMatch = $pwd1->isSame($pwd2);
             } catch (\Exception $e) {
@@ -114,7 +103,11 @@ class RegisterView implements IView
             }
         }
         return $isMatch;
+    }
 
+    private function isValidInput(): bool
+    {
+        return strlen($this->getErrorMessages()) === 0 && $this->isPasswordMatching();
     }
 
     private function hasClickedRegister(): bool
@@ -146,14 +139,14 @@ class RegisterView implements IView
 
     private function getCleanedUsername(): string
     {
-        return $this->cleanInput($this->getUsername());
+        return trim(strip_tags($this->getUsername()));
 
     }
 
-    private function getCleanedPassword(): string
+    private function getTrimmedPassword(): string
     {
         return $this->hasPassword()
-        ? $this->cleanInput($_POST[self::$password])
+        ? trim($_POST[self::$password])
         : '';
     }
 
@@ -164,16 +157,6 @@ class RegisterView implements IView
         : '';
     }
 
-    private function cleanInput(string $input): string
-    {
-        return trim(strip_tags($input));
-    }
-
-    /**
-     * Generate HTML code on the output buffer for the logout button
-     * @param $message, String output message
-     * @return string
-     */
     private function generateRegisterFormHTML($message): string
     {
         return '

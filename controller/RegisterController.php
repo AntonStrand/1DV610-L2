@@ -34,7 +34,7 @@ class RegisterController
                 $this->storage->saveToSession($nextState);
                 header("Location: ../index.php");
             } catch (\Exception $e) {
-                $this->view->showError($e->getMessage());
+                $this->view->usernameIsTaken();
             }
         }
     }

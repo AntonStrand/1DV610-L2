@@ -3,6 +3,14 @@
 # Interface
 require_once 'view/IView.php';
 
+# Exceptions
+require_once 'model/exception/username/UsernameException.php';
+require_once 'model/exception/username/TooShortException.php';
+require_once 'model/exception/username/InvalidCharactersException.php';
+
+require_once 'model/exception/password/PasswordException.php';
+require_once 'model/exception/password/TooShortException.php';
+
 # View
 require_once 'view/RegisterView.php';
 require_once 'view/LoginView.php';
