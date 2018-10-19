@@ -85,7 +85,7 @@ class RegisterView implements IView
         try {
             new \model\Password($this->getTrimmedPassword());
         } catch (\model\exception\password\TooShortException $e) {
-            $errors[] = "Username has too few characters, at least 6 characters.";
+            $errors[] = "Password has too few characters, at least 6 characters.";
         }
         return $errors;
     }
