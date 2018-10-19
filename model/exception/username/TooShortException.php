@@ -2,5 +2,5 @@
 
 namespace model\exception\username;
 
-class TooShortException extends UsernameException
+class TooShortException extends \Exception
 {}

@@ -2,5 +2,5 @@
 
 namespace model\exception\username;
 
-class InvalidCharactersException extends UsernameException
+class InvalidCharactersException extends \Exception
 {}

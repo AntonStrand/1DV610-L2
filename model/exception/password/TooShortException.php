@@ -2,5 +2,5 @@
 
 namespace model\exception\password;
 
-class TooShortException extends PasswordException
+class TooShortException extends \Exception
 {}
