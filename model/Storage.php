@@ -15,12 +15,13 @@ class Storage
     public function __construct()
     {
         $this->session = new Session();
-        $this->db = new Database();
+        $this->userDAL = new UserDAL();
+        $this->tempDAL = new TemporaryUserDAL();
     }
 
     public function authenticateUser(UserCredentials $user): bool
     {
-        return $this->db->isCorrectUserCredentials($user);
+        return $this->userDAL->isValid($user);
     }
 
     public function setSessionSecret(): void
@@ -49,17 +50,17 @@ class Storage
 
     public function saveUser(UserCredentials $user): void
     {
-        $this->db->saveUser($user);
+        $this->userDAL->save($user);
     }
 
     public function saveCookie(UserCredentials $cookie)
     {
-        $this->db->saveCookie($cookie);
+        $this->tempDAL->save($cookie);
     }
 
     public function isValidCookie(UserCredentials $cookie): bool
     {
-        return $this->db->isValidCookie($cookie);
+        return $this->tempDAL->isValid($cookie);
     }
 
     public function destroySession(): void

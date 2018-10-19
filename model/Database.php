@@ -4,89 +4,32 @@ namespace model;
 
 class Database
 {
-    private $conn;
+    private $connection;
 
-    public function isCorrectUserCredentials(UserCredentials $user): bool
+    public function connect(): void
     {
-        return $this->isValidCredentials("users", $user);
-    }
-
-    public function isValidCookie(UserCredentials $cookie): bool
-    {
-        return $this->isValidCredentials("cookies", $cookie);
-    }
-
-    public function saveCookie(UserCredentials $cookie): void
-    {
-        $this->connect();
-        $username = $cookie->getUsername();
-        $password = password_hash($cookie->getPassword(), PASSWORD_BCRYPT);
-
-        $stmt = $this->prepareStatement(
-            "INSERT INTO cookies (username, password) VALUES (?, ?)
-            ON DUPLICATE KEY UPDATE
-            username=VALUES(username),
-            password=VALUES(password);"
-        );
-
-        mysqli_stmt_bind_param($stmt, "ss", $username, $password);
-        mysqli_stmt_execute($stmt);
-    }
-
-    public function saveUser(UserCredentials $user): void
-    {
-        $this->connect();
-        $username = $user->getUsername();
-        $password = password_hash($user->getPassword(), PASSWORD_BCRYPT);
-
-        if ($this->isUsernameTaken($username)) {
-            throw new \Exception("Username is taken");
+        if (!$this->isConnected()) {
+            $this->connection = new \Mysqli(
+                \Settings::$HOST,
+                \Settings::$USER,
+                \Settings::$PASSWORD,
+                \Settings::$DB
+            );
         }
-
-        $stmt = $this->prepareStatement(
-            "INSERT INTO users (username, password) VALUES (?, ?);"
-        );
-
-        mysqli_stmt_bind_param($stmt, "ss", $username, $password);
-        mysqli_stmt_execute($stmt);
     }
 
-    private function isValidCredentials(string $tableName, UserCredentials $credentials): bool
+    public function disconnect(): void
     {
-        $this->connect();
-
-        $username = $credentials->getUsername();
-        $password = $credentials->getPassword();
-
-        $userData = mysqli_fetch_assoc($this->getUser($tableName, $username));
-
-        $dbUsername = $userData["username"];
-        $dbPassword = $userData["password"];
-
-        return password_verify($password, $dbPassword) && $username === $dbUsername;
+        $this->connection->close();
     }
 
-    private function isUsernameTaken(string $username): bool
+    public function prepareStatement(string $sql): object
     {
-        return mysqli_num_rows($this->getUser("users", $username)) > 0;
-    }
+        assert($this->isConnected());
 
-    private function getUser(string $tableName, string $username): object
-    {
-        $stmt = $this->prepareStatement(
-            "SELECT * FROM " . $tableName . " WHERE username=?;"
-        );
+        $stmt = $this->connection->stmt_init();
 
-        mysqli_stmt_bind_param($stmt, "s", $username);
-        mysqli_stmt_execute($stmt);
-        return mysqli_stmt_get_result($stmt);
-    }
-
-    private function prepareStatement(string $sql): object
-    {
-        $stmt = mysqli_stmt_init($this->conn);
-
-        if (!mysqli_stmt_prepare($stmt, $sql)) {
+        if (!$stmt->prepare($sql)) {
             throw new \Exception("Statement could not be prepared.");
         }
 
@@ -95,18 +38,7 @@ class Database
 
     private function isConnected(): bool
     {
-        return $this->conn !== null;
+        return $this->connection !== null;
     }
 
-    private function connect(): void
-    {
-        if (!$this->isConnected()) {
-            $this->conn = mysqli_connect(
-                \Settings::$HOST,
-                \Settings::$USER,
-                \Settings::$PASSWORD,
-                \Settings::$DB
-            );
-        }
-    }
 }
