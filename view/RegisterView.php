@@ -23,7 +23,7 @@ class RegisterView implements IView
     {
         return new UserCredentials(
             $this->getCleanedUsername(),
-            $this->getCleanedPassword()
+            $this->getTrimmedPassword()
         );
     }
 
@@ -63,6 +63,7 @@ class RegisterView implements IView
             return "Passwords do not match.";
         }
 
+        return '';
     }
 
     private function getUsernameErrors(): array
