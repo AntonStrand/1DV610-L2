@@ -19,22 +19,6 @@ class Password
     {
         $this->setPassword($password);
     }
-    /**
-     * Update password
-     *
-     * @throws Exception "Password is missing" if the $password is empty
-     * @throws Exception "Password has too few characters, at least 6 characters." if the $password is too short
-     * @param string $password
-     * @return void
-     */
-
-    public function setPassword(string $password)
-    {
-        if ($this->isTooShort($password)) {
-            throw new TooShortException("Password has too few characters, at least " . self::MIN_LENGTH . " characters.");
-        }
-        $this->password = $password;
-    }
 
     /**
      * Get password
@@ -51,12 +35,14 @@ class Password
         return $this->password === $testPassword->getPassword();
     }
 
-    /**
-     * Checks if the password is too short
-     *
-     * @param string $password
-     * @return boolean
-     */
+    private function setPassword(string $password)
+    {
+        if ($this->isTooShort($password)) {
+            throw new TooShortException("Password has too few characters, at least " . self::MIN_LENGTH . " characters.");
+        }
+        $this->password = $password;
+    }
+
     private function isTooShort(string $password): bool
     {
         return strlen($password) < self::MIN_LENGTH;
