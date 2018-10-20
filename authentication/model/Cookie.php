@@ -1,6 +1,6 @@
 <?php
 
-namespace model;
+namespace authentication\model;
 
 /**
  * A cookie wrapper to simplify handling cookies

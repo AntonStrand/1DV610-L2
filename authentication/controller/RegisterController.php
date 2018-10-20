@@ -1,10 +1,10 @@
 <?php
 
-namespace controller;
+namespace authentication\controller;
 
-use \model\SessionState;
-use \model\Storage;
-use \view\RegisterView;
+use \authentication\model\SessionState;
+use \authentication\model\Storage;
+use \authentication\view\RegisterView;
 
 class RegisterController
 {

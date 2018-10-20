@@ -1,12 +1,12 @@
 <?php
 
-namespace model;
+namespace authentication\model;
 
 class UserCredentialsDAL
 {
     private $db;
 
-    public function __construct(Database $db)
+    public function __construct(\app\model\Database $db)
     {
         $this->db = $db;
     }

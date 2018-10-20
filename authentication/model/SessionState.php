@@ -1,6 +1,6 @@
 <?php
 
-namespace model;
+namespace authentication\model;
 
 class SessionState
 {

@@ -1,5 +1,5 @@
 <?php
-namespace model;
+namespace authentication\model;
 
 class UserCredentials
 {

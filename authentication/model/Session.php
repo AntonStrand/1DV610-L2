@@ -2,7 +2,7 @@
 
 # A wrapper for handling session.
 
-namespace model;
+namespace authentication\model;
 
 class Session
 {

@@ -1,8 +1,8 @@
 <?php
 
-namespace view;
+namespace authentication\view;
 
-interface IView
+interface View
 {
     public function response();
     public function getUserAgent(): string;

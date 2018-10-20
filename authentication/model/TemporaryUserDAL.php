@@ -1,6 +1,6 @@
 <?php
 
-namespace model;
+namespace authentication\model;
 
 class TemporaryUserDAL
 {
@@ -8,7 +8,7 @@ class TemporaryUserDAL
     private $db;
     private $DAL;
 
-    public function __construct(Database $db)
+    public function __construct(\app\model\Database $db)
     {
         $this->db = $db;
         $this->DAL = new UserCredentialsDAL($db);

@@ -1,10 +1,10 @@
 <?php
 
-namespace view;
+namespace authentication\view;
 
-use \model\UserCredentials;
+use \authentication\model\UserCredentials;
 
-class RegisterView implements IView
+class RegisterView implements View
 {
     private static $register = 'RegisterView::Register';
     private static $name = 'RegisterView::UserName';

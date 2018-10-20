@@ -1,6 +1,6 @@
 <?php
 
-namespace view;
+namespace app\view;
 
 class Error500
 {

@@ -1,12 +1,13 @@
 <?php
 
-namespace view;
+namespace authentication\view;
 
+use \authentication\model\Cookie;
+use \authentication\model\SessionState;
+use \authentication\model\UserCredentials;
 use \Exception;
-use \model\SessionState;
-use \model\UserCredentials;
 
-class LoginView implements IView
+class LoginView implements View
 {
     private static $login = 'LoginView::Login';
     private static $logout = 'LoginView::Logout';
@@ -24,8 +25,7 @@ class LoginView implements IView
 
     public function __construct()
     {
-        echo interface_exists('\view\View') ? 'Yes' : 'No';
-        $this->cookie = new \model\Cookie();
+        $this->cookie = new Cookie();
     }
 
     public function setState(SessionState $state): void

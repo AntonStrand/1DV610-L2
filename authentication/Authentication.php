@@ -1,7 +1,9 @@
 <?php
 
+namespace authentication;
+
 # Interface
-require_once 'view/IView.php';
+require_once 'view/View.php';
 
 # Exceptions
 require_once 'model/exception/username/TooShortException.php';
@@ -29,18 +31,16 @@ require_once 'model/UserDAL.php';
 require_once 'model/TemporaryUserDAL.php';
 require_once 'model/UserCredentialsDAL.php';
 
-use \view\IView;
-
 class Authentication
 {
     private $main;
 
-    public function __construct(\model\Database $db)
+    public function __construct(\app\model\Database $db)
     {
-        $this->main = new \controller\MainController($db);
+        $this->main = new \authentication\controller\MainController($db);
     }
 
-    public function getAuthenticationView(bool $wantsToRegister): IView
+    public function getAuthenticationView(bool $wantsToRegister): \authentication\view\View
     {
         return $this->main->route($wantsToRegister);
     }

@@ -1,7 +1,7 @@
 <?php
-namespace Model;
+namespace authentication\Model;
 
-use \model\exception\password\TooShortException;
+use \authentication\model\exception\password\TooShortException;
 
 class Password
 {

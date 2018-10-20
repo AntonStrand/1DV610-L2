@@ -1,6 +1,6 @@
 <?php
 
-namespace model\exception\password;
+namespace authentication\model\exception\password;
 
 class TooShortException extends \Exception
 {}

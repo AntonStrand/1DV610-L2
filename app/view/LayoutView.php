@@ -1,12 +1,12 @@
 <?php
 
-namespace view;
+namespace app\view;
 
 class LayoutView
 {
     private static $register = 'register';
 
-    public function render($isLoggedIn, IView $v, DateTimeView $dtv)
+    public function render($isLoggedIn, \authentication\view\View $v, DateTimeView $dtv)
     {
         echo '<!DOCTYPE html>
       <html>
@@ -43,7 +43,7 @@ class LayoutView
         }
     }
 
-    private function renderLink(bool $isLoggedIn, IView $v): string
+    private function renderLink(bool $isLoggedIn, \authentication\view\View $v): string
     {
         return ($v instanceof LoginView)
         ? ($isLoggedIn ? '' : '<a href=?' . self::$register . '>Register a new user</a>')

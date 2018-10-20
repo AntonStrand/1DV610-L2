@@ -1,13 +1,13 @@
 <?php
 
-namespace controller;
+namespace authentication\controller;
 
-use \controller\LoginController;
-use \controller\RegisterController;
-use \model\Storage;
-use \view\IView;
-use \view\LoginView;
-use \view\RegisterView;
+use \authentication\controller\LoginController;
+use \authentication\controller\RegisterController;
+use \authentication\model\Storage;
+use \authentication\view\IView;
+use \authentication\view\LoginView;
+use \authentication\view\RegisterView;
 
 class MainController
 {
@@ -16,7 +16,7 @@ class MainController
 
     private $loginView;
 
-    public function __construct(\model\Database $db)
+    public function __construct(\app\model\Database $db)
     {
         $this->loginView = new LoginView();
         $this->storage = new Storage($db);
@@ -31,7 +31,7 @@ class MainController
      * @param boolean $wantsToRegister
      * @return IView
      */
-    public function route(bool $wantsToRegister): IView
+    public function route(bool $wantsToRegister): \authentication\view\View
     {
         if ($wantsToRegister) {
             $registerView = new RegisterView();

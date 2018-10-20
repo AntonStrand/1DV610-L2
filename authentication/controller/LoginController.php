@@ -1,11 +1,11 @@
 <?php
 
-namespace controller;
+namespace authentication\controller;
 
-use \model\SessionState;
-use \model\Storage;
-use \model\UserCredentials;
-use \view\LoginView;
+use \authentication\model\SessionState;
+use \authentication\model\Storage;
+use \authentication\model\UserCredentials;
+use \authentication\view\LoginView;
 
 class LoginController
 {

@@ -1,9 +1,9 @@
 <?php
 
-namespace model;
+namespace authentication\model;
 
-use \model\Session;
-use \model\SessionState;
+use \authentication\model\Session;
+use \authentication\model\SessionState;
 
 class Storage
 {
@@ -13,7 +13,7 @@ class Storage
     private $userDAL;
     private $tempDAL;
 
-    public function __construct(Database $db)
+    public function __construct(\app\model\Database $db)
     {
         $this->session = new Session();
         $this->tempDAL = new TemporaryUserDAL($db);

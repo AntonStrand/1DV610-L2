@@ -16,19 +16,18 @@ ini_set('session.use_trans_sid', false);
 error_reporting(E_ALL);
 ini_set('display_errors', 'On');
 
-// try {
-$layoutView = new \view\LayoutView();
-$dateTimeView = new \view\DateTimeView();
+try {
+    $layoutView = new \app\view\LayoutView();
+    $dateTimeView = new \app\view\DateTimeView();
+    $auth = new \authentication\Authentication(new \app\model\Database());
+    $authView = $auth->getAuthenticationView($layoutView->wantsToRegister());
+    $isAuth = $auth->isAuthenticated();
 
-$auth = new \Authentication(new \model\Database());
-$authView = $auth->getAuthenticationView($layoutView->wantsToRegister());
-$isAuth = $auth->isAuthenticated();
-
-$layoutView->render(
-    $isAuth,
-    $authView,
-    $dateTimeView
-);
-// } catch (\Exception $e) {
-//     new \view\Error500();
-// }
+    $layoutView->render(
+        $isAuth,
+        $authView,
+        $dateTimeView
+    );
+} catch (\Exception $e) {
+    new \app\view\Error500();
+}

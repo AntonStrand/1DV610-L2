@@ -1,6 +1,6 @@
 <?php
 
-namespace model\exception\username;
+namespace authentication\model\exception\username;
 
 class InvalidCharactersException extends \Exception
 {}
