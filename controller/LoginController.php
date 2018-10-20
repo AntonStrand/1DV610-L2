@@ -46,7 +46,6 @@ class LoginController
                 $this->view->removeCookie();
                 $this->view->useLogoutMessage();
             }
-            $this->storage->saveToSession(new SessionState());
         }
     }
 
@@ -78,8 +77,7 @@ class LoginController
             $this->view->setCookie();
         }
 
-        $this->storage->setSessionSecret();
         $this->sessionState->loginAs($userCredentials->getUsername());
-        $this->storage->saveToSession($this->sessionState);
+        $this->storage->saveToSession($this->sessionState, $this->view->getUserAgent());
     }
 }

@@ -25,16 +25,13 @@ class Storage
         return $this->userDAL->isValid($user);
     }
 
-    public function setSessionSecret(): void
-    {
-        $this->session->set(self::$SESSION_SECRET, $this->getSecretString());
-    }
-
-    public function getSessionState(): SessionState
+    public function getSessionState(string $fingerPrint): SessionState
     {
         if ($this->session->has(self::$SESSION_KEY)) {
             $state = $this->session->get(self::$SESSION_KEY);
-            if ($state->isAuthenticated() && $this->session->has(self::$SESSION_SECRET) && $this->session->get(self::$SESSION_SECRET) == $this->getSecretString()) {
+            if ($state->isAuthenticated()
+                && $this->session->has(self::$SESSION_SECRET)
+                && $this->session->get(self::$SESSION_SECRET) == $this->getSecretString($fingerPrint)) {
                 return $state;
             } else if (!$state->isAuthenticated()) {
                 return $state;
@@ -44,8 +41,9 @@ class Storage
         return new SessionState();
     }
 
-    public function saveToSession(SessionState $state): void
+    public function saveToSession(SessionState $state, string $fingerPrint): void
     {
+        $this->setSessionSecret($fingerPrint);
         $this->session->set(self::$SESSION_KEY, $state);
     }
 
@@ -69,8 +67,13 @@ class Storage
         $this->session->destroy();
     }
 
-    private function getSecretString(): string
+    private function setSessionSecret(string $fingerPrint): void
     {
-        return md5($_SERVER["HTTP_USER_AGENT"] . self::$SESSION_SECRET);
+        $this->session->set(self::$SESSION_SECRET, $this->getSecretString($fingerPrint));
+    }
+
+    private function getSecretString(string $fingerPrint): string
+    {
+        return md5($fingerPrint . self::$SESSION_SECRET);
     }
 }

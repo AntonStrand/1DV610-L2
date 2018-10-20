@@ -31,7 +31,7 @@ class RegisterController
                     $userCredentials->getUsername()
                 );
 
-                $this->storage->saveToSession($nextState);
+                $this->storage->saveToSession($nextState, $this->view->getUserAgent());
                 header("Location: ../index.php");
             } catch (\Exception $e) {
                 $this->view->usernameIsTaken();

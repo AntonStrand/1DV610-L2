@@ -22,10 +22,19 @@ class LoginView implements IView
 
     private $cookie;
 
-    public function __construct(SessionState $state)
+    public function __construct()
+    {
+        $this->cookie = new \model\Cookie();
+    }
+
+    public function setState(SessionState $state): void
     {
         $this->state = $state;
-        $this->cookie = new \model\Cookie();
+    }
+
+    public function getUserAgent(): string
+    {
+        return $_SERVER["HTTP_USER_AGENT"];
     }
 
     public function response()

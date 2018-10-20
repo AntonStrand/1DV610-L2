@@ -14,6 +14,11 @@ class RegisterView implements IView
 
     private $isUsernameTaken = false;
 
+    public function getUserAgent(): string
+    {
+        return $_SERVER["HTTP_USER_AGENT"];
+    }
+
     public function shouldRegister(): bool
     {
         return $this->hasClickedRegister() && $this->isValidInput();

@@ -22,15 +22,17 @@ class MainController
 
     public function __construct()
     {
-        $db = new \model\Database();
-        $this->storage = new Storage($db);
-        $this->state = $this->storage->getSessionState();
-
         //CREATE OBJECTS OF THE VIEWS
-        $this->loginView = new LoginView($this->state);
+        $this->loginView = new LoginView();
         $this->registerView = new RegisterView();
         $this->layoutView = new LayoutView();
         $this->dateTimeView = new DateTimeView();
+
+        $db = new \model\Database();
+        $this->storage = new Storage($db);
+        $this->state = $this->storage->getSessionState($this->loginView->getUserAgent());
+        $this->loginView->setState($this->state);
+
     }
 
     public function route(): void
