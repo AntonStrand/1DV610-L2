@@ -4,6 +4,5 @@ namespace app\view;
 
 interface View
 {
-    public function response();
-    public function getUserAgent(): string;
+    public function response(): string;
 }
