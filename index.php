@@ -7,7 +7,7 @@ require_once 'app/view/LayoutView.php';
 require_once 'app/view/DateTimeView.php';
 require_once 'app/view/Error500.php';
 require_once 'app/model/Database.php';
-// require_once 'app/view/IView.php';
+require_once 'app/view/View.php';
 
 ini_set('session.use_only_cookies', true);
 ini_set('session.use_trans_sid', false);

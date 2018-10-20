@@ -2,8 +2,7 @@
 
 namespace view;
 
-interface IView
+interface View
 {
     public function response();
-    public function getUserAgent(): string;
 }

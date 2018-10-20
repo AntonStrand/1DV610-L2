@@ -24,6 +24,7 @@ class LoginView implements IView
 
     public function __construct()
     {
+        echo interface_exists('\view\View') ? 'Yes' : 'No';
         $this->cookie = new \model\Cookie();
     }
 
