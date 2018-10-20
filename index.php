@@ -27,6 +27,7 @@ require_once 'model/Password.php';
 require_once 'model/UserCredentials.php';
 require_once 'model/Storage.php';
 require_once 'model/Session.php';
+require_once 'model/Cookie.php';
 require_once 'model/Database.php';
 require_once 'model/UserDAL.php';
 require_once 'model/TemporaryUserDAL.php';

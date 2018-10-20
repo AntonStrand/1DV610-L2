@@ -20,9 +20,12 @@ class LoginView implements IView
     private $message;
     private $state;
 
+    private $cookie;
+
     public function __construct(SessionState $state)
     {
         $this->state = $state;
+        $this->cookie = new \model\Cookie();
     }
 
     public function response()
@@ -95,40 +98,30 @@ class LoginView implements IView
     public function setCookie(): void
     {
         $aDayInSeconds = 86400;
-        $expires = time() + $aDayInSeconds;
         $username = $this->getUsername();
         $password = bin2hex(random_bytes(20));
-        \setcookie(self::$cookieName, $username, $expires, "/", "", "", true);
-        \setcookie(self::$cookiePassword, $password, $expires, "/", "", "", true);
-
-        // To make the cookie available during this request.
-        $_COOKIE[self::$cookieName] = $username;
-        $_COOKIE[self::$cookiePassword] = $password;
+        $this->cookie->set(self::$cookieName, $username, $aDayInSeconds);
+        $this->cookie->set(self::$cookiePassword, $password, $aDayInSeconds);
     }
 
     public function removeCookie(): void
     {
-        $expires = time() - 100;
-        \setcookie(self::$cookieName, null, $expires, "/", "", "", true);
-        \setcookie(self::$cookiePassword, null, $expires, "/", "", "", true);
-
-        // To remove the cookies during this request.
-        $_COOKIE[self::$cookieName] = null;
-        $_COOKIE[self::$cookiePassword] = null;
+        $this->cookie->delete(self::$cookieName);
+        $this->cookie->delete(self::$cookiePassword);
     }
 
     public function getCookieData(): UserCredentials
     {
-        if ($this->isCookieSet()) {
-            $username = $_COOKIE[self::$cookieName];
-            $password = $_COOKIE[self::$cookiePassword];
-            return new UserCredentials($username, $password);
-        }
+        assert($this->isCookieSet());
+        $username = $this->cookie->get(self::$cookieName);
+        $password = $this->cookie->get(self::$cookiePassword);
+        return new UserCredentials($username, $password);
+
     }
 
     private function isCookieSet(): bool
     {
-        return isset($_COOKIE[self::$cookieName]) && isset($_COOKIE[self::$cookiePassword]);
+        return $this->cookie->has(self::$cookieName) && $this->cookie->has(self::$cookiePassword);
     }
 
     private function isNewMember(): bool
