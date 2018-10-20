@@ -24,6 +24,7 @@ class Session
 
     public function get(string $name)
     {
+        assert($this->has($name));
         return unserialize($_SESSION[$name]);
     }
 
