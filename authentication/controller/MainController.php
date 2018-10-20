@@ -5,6 +5,7 @@ namespace controller;
 use \controller\LoginController;
 use \controller\RegisterController;
 use \model\Storage;
+use \view\IView;
 use \view\LoginView;
 use \view\RegisterView;
 
@@ -15,17 +16,22 @@ class MainController
 
     private $loginView;
 
-    public function __construct()
+    public function __construct(\model\Database $db)
     {
         $this->loginView = new LoginView();
-        $db = new \model\Database();
         $this->storage = new Storage($db);
         $this->state = $this->storage->getSessionState($this->loginView->getUserAgent());
         $this->loginView->setState($this->state);
 
     }
 
-    public function route(bool $wantsToRegister)
+    /**
+     * Route to the matching alternative and returns the matching view.
+     *
+     * @param boolean $wantsToRegister
+     * @return IView
+     */
+    public function route(bool $wantsToRegister): IView
     {
         if ($wantsToRegister) {
             $registerView = new RegisterView();
@@ -34,11 +40,16 @@ class MainController
         } else {
             new LoginController($this->loginView, $this->storage, $this->state);
             return $this->loginView;
-            // $this->layoutView->render(
-            //     $this->state->isAuthenticated(),
-            //     $this->loginView,
-            //     $this->dateTimeView
-            // );
         }
+    }
+
+    public function isAuthenticated(): bool
+    {
+        return $this->state->isAuthenticated();
+    }
+
+    public function getUsername(): string
+    {
+        return $this->state->getUsername();
     }
 }

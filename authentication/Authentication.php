@@ -11,9 +11,6 @@ require_once 'model/exception/password/TooShortException.php';
 # View
 require_once 'view/RegisterView.php';
 require_once 'view/LoginView.php';
-require_once 'view/DateTimeView.php';
-require_once 'view/LayoutView.php';
-require_once 'view/Error500.php';
 
 # Controller
 require_once 'controller/LoginController.php';
@@ -33,15 +30,29 @@ require_once 'model/UserDAL.php';
 require_once 'model/TemporaryUserDAL.php';
 require_once 'model/UserCredentialsDAL.php';
 
+use \view\IView;
+
 class Authentication
 {
-    public function getAuthenticationView(bool $wantsToRegister): \view\IView
+    private $main;
+
+    public function __construct(\model\Database $db)
     {
-        $main = new \controller\MainController();
-        return $main->route($wantsToRegister);
+        $this->main = new \controller\MainController($db);
+    }
+
+    public function getAuthenticationView(bool $wantsToRegister): IView
+    {
+        return $this->main->route($wantsToRegister);
+    }
+
+    public function isAuthenticated(): bool
+    {
+        return $this->main->isAuthenticated();
+    }
+
+    public function getUsername(): string
+    {
+        return $this->main->getUsername();
     }
 }
-// try {
-// } catch (\Exception $e) {
-//     new \view\Error500();
-// }
