@@ -10,13 +10,14 @@ class Storage
     private static $SESSION_KEY = __NAMESPACE__ . __CLASS__ . "state";
     private static $SESSION_SECRET = __NAMESPACE__ . __CLASS__ . "secret";
     private $session;
-    private $db;
+    private $userDAL;
+    private $tempDAL;
 
-    public function __construct()
+    public function __construct(Database $db)
     {
         $this->session = new Session();
-        $this->userDAL = new UserDAL();
-        $this->tempDAL = new TemporaryUserDAL();
+        $this->tempDAL = new TemporaryUserDAL($db);
+        $this->userDAL = new UserDAL($db);
     }
 
     public function authenticateUser(UserCredentials $user): bool
@@ -53,9 +54,9 @@ class Storage
         $this->userDAL->save($user);
     }
 
-    public function saveCookie(UserCredentials $cookie)
+    public function saveTemporaryUser(UserCredentials $userCredentials)
     {
-        $this->tempDAL->save($cookie);
+        $this->tempDAL->save($userCredentials);
     }
 
     public function isValidCookie(UserCredentials $cookie): bool

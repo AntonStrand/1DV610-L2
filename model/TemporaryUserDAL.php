@@ -8,10 +8,10 @@ class TemporaryUserDAL
     private $db;
     private $DAL;
 
-    public function __construct()
+    public function __construct(Database $db)
     {
-        $this->db = new Database();
-        $this->DAL = new UserCredentialsDAL($this->db);
+        $this->db = $db;
+        $this->DAL = new UserCredentialsDAL($db);
     }
 
     public function isValid(UserCredentials $user): bool
@@ -27,18 +27,13 @@ class TemporaryUserDAL
 
         $stmt = $this->db->prepareStatement(
             "INSERT INTO " . self::$TABLE_NAME . " (username, password) VALUES (?, ?)
-          ON DUPLICATE KEY UPDATE
-          username=VALUES(username),
-          password=VALUES(password);"
+            ON DUPLICATE KEY UPDATE
+            username=VALUES(username),
+            password=VALUES(password);"
         );
 
         $stmt->bind_param("ss", $username, $password);
         $stmt->execute();
         $this->db->disconnect();
-    }
-
-    private function isUsernameTaken(string $username): bool
-    {
-        return mysqli_num_rows($this->DAL->getUser(self::$TABLE_NAME, $username)) > 0;
     }
 }

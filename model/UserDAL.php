@@ -8,10 +8,10 @@ class UserDAL
     private $db;
     private $DAL;
 
-    public function __construct()
+    public function __construct(Database $db)
     {
-        $this->db = new Database();
-        $this->DAL = new UserCredentialsDAL($this->db);
+        $this->db = $db;
+        $this->DAL = new UserCredentialsDAL($db);
     }
 
     public function isValid(UserCredentials $user): bool

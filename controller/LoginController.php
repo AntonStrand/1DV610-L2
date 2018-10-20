@@ -54,7 +54,7 @@ class LoginController
     {
         if ($this->view->shouldSaveCookie()) {
             $cookie = $this->view->getCookieData();
-            $this->storage->saveCookie($cookie);
+            $this->storage->saveTemporaryUser($cookie);
         }
     }
 

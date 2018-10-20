@@ -21,6 +21,7 @@ class Database
     public function disconnect(): void
     {
         $this->connection->close();
+        $this->connection = null;
     }
 
     public function prepareStatement(string $sql): object

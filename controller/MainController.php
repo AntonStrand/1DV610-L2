@@ -22,7 +22,8 @@ class MainController
 
     public function __construct()
     {
-        $this->storage = new Storage();
+        $db = new \model\Database();
+        $this->storage = new Storage($db);
         $this->state = $this->storage->getSessionState();
 
         //CREATE OBJECTS OF THE VIEWS
