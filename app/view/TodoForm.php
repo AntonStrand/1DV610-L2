@@ -4,15 +4,15 @@ namespace app\view;
 
 class TodoForm implements View
 {
-    private static $todo = "TodoForm::todo";
+    private static $task = "TodoForm::task";
     private static $submit = "TodoForm::submit";
 
     public function shouldSaveTodo(): bool
     {
-        return $this->hasTodo() && $this->hasClickedSubmit();
+        return $this->hasTask() && $this->hasClickedSubmit();
     }
 
-    public function getTodo(): string
+    public function getTask(): string
     {
         assert($this->shouldSaveTodo());
         return $this->getRequestTodo();
@@ -28,24 +28,24 @@ class TodoForm implements View
         return '
           <form method="post" >
             <fieldset>
-              <legend>Add a todo</legend>
-              <label for="' . self::$todo . '">Username :</label>
-              <input type="text" id="' . self::$todo . '" name="' . self::$todo . '" value="' . $this->getRequestTodo() . '" />
+              <legend>Add a task</legend>
+              <label for="' . self::$task . '">Task :</label>
+              <input type="text" id="' . self::$task . '" name="' . self::$task . '" value="' . $this->getRequestTodo() . '" />
               <input type="submit" name="' . self::$submit . '" value="save" />
             </fieldset>
           </form>
         ';
     }
 
-    private function hasTodo(): bool
+    private function hasTask(): bool
     {
-        return isset($_POST[self::$todo]);
+        return isset($_POST[self::$task]);
     }
 
     private function getRequestTodo(): string
     {
-        return isset($_POST[self::$todo])
-        ? strip_tags($_POST[self::$todo])
+        return isset($_POST[self::$task])
+        ? strip_tags($_POST[self::$task])
         : '';
     }
 
