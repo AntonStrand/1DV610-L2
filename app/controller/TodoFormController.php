@@ -18,15 +18,19 @@ class TodoFormController
     public function handleTodoForm(TodoDAL $todoDAL, string $username): void
     {
         if ($this->todoForm->shouldSaveTodo()) {
-            $todoDAL->save(
-                new Todo(
-                    $username,
-                    $this->todoForm->getTask(),
-                    false
-                )
-            );
-            // Make sure that the todo isn't save again on reload
-            header("Location: ../index.php");
+            try {
+                $todoDAL->save(
+                    new Todo(
+                        $username,
+                        $this->todoForm->getTask(),
+                        false
+                    )
+                );
+                // Make sure that the todo isn't save again on reload
+                header("Location: ../index.php");
+            } catch (\Exception $e) {
+                $this->todoForm->showErrorMessage();
+            }
         }
     }
 }

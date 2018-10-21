@@ -7,6 +7,8 @@ class TodoForm implements View
     private static $task = "TodoForm::task";
     private static $submit = "TodoForm::submit";
 
+    private $hasError = false;
+
     public function shouldSaveTodo(): bool
     {
         return $this->hasTask() && $this->hasClickedSubmit();
@@ -16,6 +18,11 @@ class TodoForm implements View
     {
         assert($this->shouldSaveTodo());
         return $this->getRequestTodo();
+    }
+
+    public function showErrorMessage(): void
+    {
+        $this->hasError = true;
     }
 
     public function response(): string
@@ -29,12 +36,18 @@ class TodoForm implements View
           <form method="post" >
             <fieldset>
               <legend>Add a todo</legend>
+              ' . $this->getErrorMessage() . '
               <label for="' . self::$task . '">Task :</label>
               <input type="text" id="' . self::$task . '" name="' . self::$task . '" value="' . $this->getRequestTodo() . '" />
               <input type="submit" name="' . self::$submit . '" value="Add todo" />
             </fieldset>
           </form>
         ';
+    }
+
+    private function getErrorMessage(): string
+    {
+        return $this->hasError ? '<p style="color: red">The todo couldn\'t be saved</p>' : '';
     }
 
     private function hasTask(): bool
