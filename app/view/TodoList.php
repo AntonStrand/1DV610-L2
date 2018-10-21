@@ -25,7 +25,7 @@ class TodoList implements View
         $response = '<div><h2>Your todos</h2>';
 
         if ($this->hasNoTodos()) {
-            return $response . '<b>You don\'t have any todos yet.<b></div>';
+            return $response . '<b>You don\'t have any todos yet.</b></div>';
         }
 
         foreach ($this->todoViews as $todo) {
