@@ -18,5 +18,14 @@ class TodoListController
     {
         $todos = $todoDAL->getTodosForUser($username);
         $this->todoList->addTodos($todos);
+        $this->handleTodoChange($todoDAL);
+    }
+
+    private function handleTodoChange(TodoDAL $todoDAL): void
+    {
+        if ($this->todoList->isATodoCompleted()) {
+            $todo = $this->todoList->getCompletedTodo();
+            $todoDAL->setToComplete($todo);
+        }
     }
 }

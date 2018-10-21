@@ -31,4 +31,14 @@ class Todo
     {
         return $this->isComplete;
     }
+
+    public function setToComplete(): void
+    {
+        $this->isComplete = true;
+    }
+
+    public function getId(): int
+    {
+        return $this->id;
+    }
 }

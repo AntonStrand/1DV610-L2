@@ -33,7 +33,7 @@ class TodoForm implements View
     private function generateHTML(): string
     {
         return '
-          <form method="post" >
+          <form method="post">
             <fieldset>
               <legend>Add a todo</legend>
               ' . $this->getErrorMessage() . '

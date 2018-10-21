@@ -29,6 +29,12 @@ class TodoDAL
         $this->db->disconnect();
     }
 
+    public function setToComplete(Todo $todo): void
+    {
+        $todo->setToComplete();
+        $this->updateTodo($todo);
+    }
+
     public function getTodosForUser(string $username): array
     {
         $this->db->connect();
@@ -49,5 +55,24 @@ class TodoDAL
 
         $this->db->disconnect();
         return $todos;
+    }
+
+    private function updateTodo(Todo $todo): void
+    {
+        $this->db->connect();
+
+        $username = $todo->getUsername();
+        $isComplete = $todo->isComplete();
+        $task = $todo->getTask();
+        $id = $todo->getId();
+
+        $stmt = $this->db->prepareStatement(
+            // "UPDATE `todos` SET `isComplete`=? WHERE `username`=? AND `id`=?"
+            "UPDATE " . self::$TABLE_NAME . " SET `username`=?,`task`=?,`isComplete`=? WHERE `username`=? AND `id`=?"
+        );
+
+        $stmt->bind_param("ssisi", $username, $task, $isComplete, $username, $id);
+        $stmt->execute();
+        $this->db->disconnect();
     }
 }

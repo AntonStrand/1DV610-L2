@@ -20,6 +20,27 @@ class TodoList implements View
         }
     }
 
+    public function isATodoCompleted(): bool
+    {
+        foreach ($this->todoViews as $todo) {
+            if ($todo->isCompleted()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public function getCompletedTodo(): \app\model\Todo
+    {
+        assert($this->isATodoCompleted());
+
+        foreach ($this->todoViews as $todo) {
+            if ($todo->isCompleted()) {
+                return $todo->getTodoData();
+            }
+        }
+    }
+
     public function response(): string
     {
         $response = '<div><h2>Your todos</h2>';
