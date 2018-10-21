@@ -2,6 +2,26 @@
 
 namespace app\controller;
 
+# Model
+require_once 'app/model/Database.php';
+require_once 'app/model/Todo.php';
+require_once 'app/model/TodoDAL.php';
+
+# View
+require_once 'app/view/LayoutView.php';
+require_once 'app/view/DateTimeView.php';
+require_once 'app/view/View.php';
+require_once 'app/view/Error500.php';
+require_once 'app/view/TodoForm.php';
+require_once 'app/view/TodoList.php';
+require_once 'app/view/TodoPage.php';
+require_once 'app/view/Todo.php';
+
+# Controller
+require_once 'app/controller/TodoFormController.php';
+require_once 'app/controller/TodoListController.php';
+require_once 'app/controller/TodoController.php';
+
 use app\controller\TodoController;
 use app\model\Database;
 use app\model\TodoDAL;
