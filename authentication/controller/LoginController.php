@@ -43,8 +43,7 @@ class LoginController
             if ($this->sessionState->isAuthenticated()) {
                 $this->sessionState->logout();
                 $this->storage->destroySession();
-                $this->view->removeCookie();
-                $this->view->useLogoutMessage();
+                $this->view->logout();
             }
         }
     }

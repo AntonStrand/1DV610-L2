@@ -100,8 +100,9 @@ class LoginView implements View
         $this->message = "Wrong name or password";
     }
 
-    public function useLogoutMessage(): void
+    public function logout(): void
     {
+        $this->removeCookie();
         $this->message = "Bye bye!";
     }
 
@@ -114,12 +115,6 @@ class LoginView implements View
         $this->cookie->set(self::$cookiePassword, $password, $aDayInSeconds);
     }
 
-    public function removeCookie(): void
-    {
-        $this->cookie->delete(self::$cookieName);
-        $this->cookie->delete(self::$cookiePassword);
-    }
-
     public function getCookieData(): UserCredentials
     {
         assert($this->isCookieSet());
@@ -127,6 +122,12 @@ class LoginView implements View
         $password = $this->cookie->get(self::$cookiePassword);
         return new UserCredentials($username, $password);
 
+    }
+
+    private function removeCookie(): void
+    {
+        $this->cookie->delete(self::$cookieName);
+        $this->cookie->delete(self::$cookiePassword);
     }
 
     private function isCookieSet(): bool
