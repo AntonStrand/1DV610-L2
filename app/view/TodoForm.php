@@ -52,7 +52,7 @@ class TodoForm implements View
 
     private function hasTask(): bool
     {
-        return isset($_POST[self::$task]) && strlen($_POST[self::$task]) > 0;
+        return isset($_POST[self::$task]) && strlen(trim($_POST[self::$task])) > 0;
     }
 
     private function getRequestTodo(): string
