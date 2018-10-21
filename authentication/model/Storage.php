@@ -29,11 +29,8 @@ class Storage
     {
         if ($this->session->has(self::$SESSION_KEY)) {
             $state = $this->session->get(self::$SESSION_KEY);
-            if ($state->isAuthenticated()
-                && $this->session->has(self::$SESSION_SECRET)
-                && $this->session->get(self::$SESSION_SECRET) == $this->getSecretString($fingerPrint)) {
-                return $state;
-            } else if (!$state->isAuthenticated()) {
+
+            if ($this->shouldUseState($state, $fingerPrint)) {
                 return $state;
             }
         }
@@ -75,5 +72,16 @@ class Storage
     private function getSecretString(string $fingerPrint): string
     {
         return md5($fingerPrint . self::$SESSION_SECRET);
+    }
+
+    private function shouldUseState(SessionState $state, string $fingerPrint): bool
+    {
+        return ($state->isAuthenticated() && $this->isUntouchedSession($fingerPrint)) || !$state->isAuthenticated();
+    }
+
+    private function isUntouchedSession(string $fingerPrint): bool
+    {
+        return $this->session->has(self::$SESSION_SECRET)
+        && $this->session->get(self::$SESSION_SECRET) == $this->getSecretString($fingerPrint);
     }
 }
