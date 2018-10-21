@@ -20,7 +20,7 @@ class TodoDAL
         $task = $todo->getTask();
         $isComplete = intval($todo->isComplete());
 
-        $stmt = $this->$db->prepareStatement(
+        $stmt = $this->db->prepareStatement(
             "INSERT INTO " . self::$TABLE_NAME . " (username, task, isComplete) VALUES (?, ?, ?);"
         );
 

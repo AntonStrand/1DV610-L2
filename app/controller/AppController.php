@@ -16,12 +16,13 @@ class AppController
         $todoFormController = new \app\controller\TodoFormController($todoForm);
         $layoutView = new \app\view\LayoutView();
         $dateTimeView = new \app\view\DateTimeView();
-        $auth = new \authentication\Authentication(new \app\model\Database());
+        $auth = new \authentication\Authentication($db);
         $authView = $auth->getAuthenticationView($layoutView->wantsToRegister());
         $isAuth = $auth->isAuthenticated();
         if ($isAuth) {
             $usename = $auth->getUsername();
             $todoFormController->handleTodoForm($todoDAL, $usename);
+            echo $todoForm->response();
         }
 
         $layoutView->render(
