@@ -38,7 +38,7 @@ class LoginView implements View
         return $_SERVER["HTTP_USER_AGENT"];
     }
 
-    public function response()
+    public function response(): string
     {
         $message = $this->getMessage();
 
