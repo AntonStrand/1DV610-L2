@@ -4,9 +4,6 @@ namespace app\controller;
 
 class AppController
 {
-    /**
-     * Move most of index.php here
-     */
     public function __construct()
     {
         $db = new \app\model\Database();
@@ -19,6 +16,7 @@ class AppController
         $auth = new \authentication\Authentication($db);
         $authView = $auth->getAuthenticationView($layoutView->wantsToRegister());
         $isAuth = $auth->isAuthenticated();
+
         if ($isAuth) {
             $usename = $auth->getUsername();
             $todoFormController->handleTodoForm($todoDAL, $usename);
