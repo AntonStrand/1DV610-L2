@@ -18,6 +18,12 @@ class TodoForm implements View
         return $this->getRequestTodo();
     }
 
+    public function clearForm(): void
+    {
+        // Empty the form
+        $_POST = array();
+    }
+
     public function response(): string
     {
         return $this->generateHTML();
@@ -28,7 +34,7 @@ class TodoForm implements View
         return '
           <form method="post" >
             <fieldset>
-              <legend>Add a task</legend>
+              <legend>Add a todo</legend>
               <label for="' . self::$task . '">Task :</label>
               <input type="text" id="' . self::$task . '" name="' . self::$task . '" value="' . $this->getRequestTodo() . '" />
               <input type="submit" name="' . self::$submit . '" value="save" />
