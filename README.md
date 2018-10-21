@@ -30,6 +30,17 @@ CREATE TABLE `cookies` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 ```
 
+#### SQL for creating `todos` table
+
+```SQL
+CREATE TABLE `todos` (
+  `id` int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  `username` varchar(128) NOT NULL,
+  `task` text NOT NULL,
+  `isComplete` tinyint(1) DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+```
+
 ### 2. Create a Settings.php
 
 Create a `Settings.php` in the root folder. Use the template below and change the information to fit your setup.
