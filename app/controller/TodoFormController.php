@@ -25,7 +25,8 @@ class TodoFormController
                     false
                 )
             );
-            $this->todoForm->clearForm();
+            // Make sure that the todo isn't save again on reload
+            header("Location: ../index.php");
         }
     }
 }
