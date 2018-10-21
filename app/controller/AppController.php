@@ -2,32 +2,44 @@
 
 namespace app\controller;
 
+use app\controller\TodoController;
+use app\model\Database;
+use app\model\TodoDAL;
+use app\view\DateTimeView;
+use app\view\LayoutView;
+use app\view\TodoForm;
+use app\view\TodoList;
+use app\view\TodoPage;
+use authentication\Authentication;
+
 class AppController
 {
     public function __construct()
     {
-        $db = new \app\model\Database();
-        $todoDAL = new \app\model\TodoDAL($db);
+        $db = new Database();
+        $todoDAL = new TodoDAL($db);
 
-        $todoForm = new \app\view\TodoForm();
-        $todoFormController = new \app\controller\TodoFormController($todoForm);
-        $layoutView = new \app\view\LayoutView();
-        $dateTimeView = new \app\view\DateTimeView();
-        $auth = new \authentication\Authentication($db);
-        $authView = $auth->getAuthenticationView($layoutView->wantsToRegister());
-        $isAuth = $auth->isAuthenticated();
-        $todoList = new \app\view\TodoList();
-        $todoController = new \app\controller\TodoController($todoDAL, $todoForm, $todoList);
+        # Views
+        $todoForm = new TodoForm();
+        $todoList = new TodoList();
+        $layoutView = new LayoutView();
+        $dateTimeView = new DateTimeView();
         $todoPage = null;
 
-        if ($isAuth) {
+        # Authenticate
+        $auth = new Authentication($db);
+        $authView = $auth->getAuthenticationView($layoutView->wantsToRegister());
+        $isAuthenticated = $auth->isAuthenticated();
+
+        if ($isAuthenticated) {
+            $todoController = new TodoController($todoDAL, $todoForm, $todoList);
             $username = $auth->getUsername();
             $todoController->handleUser($username);
-            $todoPage = new \app\view\TodoPage($todoForm, $todoList);
+            $todoPage = new TodoPage($todoForm, $todoList);
         }
 
         $layoutView->render(
-            $isAuth,
+            $isAuthenticated,
             $authView,
             $dateTimeView,
             $todoPage
