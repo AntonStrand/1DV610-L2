@@ -1,6 +1,18 @@
-# 1DV610 L2
+# 1DV610
 
-My solution for L2. It fulfills 100% of the automatic tests.
+My solution for 1DV610. It fulfills 100% of the automatic tests.
+
+It is a todo app and you can find it here: [1dv610.antonstrand.se](http://1dv610.antonstrand.se/)
+
+### Use cases
+
+1. [UC1 Add a todo item](https://github.com/AntonStrand/1DV610-L2/wiki/UC1-Add-a-todo-item)
+2. [UC2 Lista alla todos](https://github.com/AntonStrand/1DV610-L2/wiki/UC2-Lista-todos)
+
+### Test cases
+
+- [Test för Use case 1](https://github.com/AntonStrand/1DV610-L2/wiki/Test-case---UC1)
+- [Test för Use case 2](https://github.com/AntonStrand/1DV610-L2/wiki/Test-case---UC2)
 
 ## How to get started
 
