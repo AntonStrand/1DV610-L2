@@ -7,12 +7,12 @@ It is a todo app and you can find it here: [1dv610.antonstrand.se](http://1dv610
 ### Use cases
 
 1. [UC1 Add a todo item](https://github.com/AntonStrand/1DV610-L2/wiki/UC1-Add-a-todo-item)
-2. [UC2 Lista alla todos](https://github.com/AntonStrand/1DV610-L2/wiki/UC2-Lista-todos)
+2. [UC2 List todos](https://github.com/AntonStrand/1DV610-L2/wiki/UC2-Lista-todos)
 
 ### Test cases
 
-- [Test för Use case 1](https://github.com/AntonStrand/1DV610-L2/wiki/Test-case---UC1)
-- [Test för Use case 2](https://github.com/AntonStrand/1DV610-L2/wiki/Test-case---UC2)
+- [Test for Use case 1](https://github.com/AntonStrand/1DV610-L2/wiki/Test-case---UC1)
+- [Test for Use case 2](https://github.com/AntonStrand/1DV610-L2/wiki/Test-case---UC2)
 
 ## How to get started
 
