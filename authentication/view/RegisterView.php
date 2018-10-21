@@ -2,7 +2,12 @@
 
 namespace authentication\view;
 
-use \authentication\model\UserCredentials;
+use authentication\model\exception\password\TooShortException as PasswordTooShortException;
+use authentication\model\exception\username\InvalidCharactersException;
+use authentication\model\exception\username\TooShortException as UsernameTooShortException;
+use authentication\model\Password;
+use authentication\model\UserCredentials;
+use authentication\model\Username;
 
 class RegisterView implements View
 {
@@ -75,10 +80,10 @@ class RegisterView implements View
     {
         $errors = array();
         try {
-            new \model\Username(trim($this->getUsername()));
-        } catch (\model\exception\username\InvalidCharactersException $e) {
+            new Username(trim($this->getUsername()));
+        } catch (InvalidCharactersException $e) {
             $errors[] = "Username contains invalid characters.";
-        } catch (\model\exception\username\TooShortException $e) {
+        } catch (UsernameTooShortException $e) {
             $errors[] = "Username has too few characters, at least 3 characters.";
         }
         return $errors;
@@ -88,8 +93,8 @@ class RegisterView implements View
     {
         $errors = array();
         try {
-            new \model\Password($this->getTrimmedPassword());
-        } catch (\model\exception\password\TooShortException $e) {
+            new Password($this->getTrimmedPassword());
+        } catch (PasswordTooShortException $e) {
             $errors[] = "Password has too few characters, at least 6 characters.";
         }
         return $errors;
@@ -101,8 +106,8 @@ class RegisterView implements View
 
         if ($this->hasPassword() && $this->hasRepeatedPassword()) {
             try {
-                $pwd1 = new \model\Password($this->getTrimmedPassword());
-                $pwd2 = new \model\Password($this->getRepeatedPassword());
+                $pwd1 = new Password($this->getTrimmedPassword());
+                $pwd2 = new Password($this->getRepeatedPassword());
                 $isMatch = $pwd1->isSame($pwd2);
             } catch (\Exception $e) {
                 $isMatch = false;

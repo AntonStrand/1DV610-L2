@@ -1,8 +1,8 @@
 <?php
 namespace authentication\model;
 
-use \authentication\model\exception\username\InvalidCharactersException;
-use \authentication\model\exception\username\TooShortException;
+use authentication\model\exception\username\InvalidCharactersException;
+use authentication\model\exception\username\TooShortException;
 
 class Username
 {
