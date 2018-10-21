@@ -20,7 +20,6 @@ class TodoForm implements View
 
     public function clearForm(): void
     {
-        // Empty the form
         $_POST = array();
     }
 
