@@ -67,7 +67,6 @@ class TodoDAL
         $id = $todo->getId();
 
         $stmt = $this->db->prepareStatement(
-            // "UPDATE `todos` SET `isComplete`=? WHERE `username`=? AND `id`=?"
             "UPDATE " . self::$TABLE_NAME . " SET `username`=?,`task`=?,`isComplete`=? WHERE `username`=? AND `id`=?"
         );
 
