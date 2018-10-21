@@ -31,7 +31,7 @@ class TodoForm implements View
               <legend>Add a todo</legend>
               <label for="' . self::$task . '">Task :</label>
               <input type="text" id="' . self::$task . '" name="' . self::$task . '" value="' . $this->getRequestTodo() . '" />
-              <input type="submit" name="' . self::$submit . '" value="save" />
+              <input type="submit" name="' . self::$submit . '" value="Add todo" />
             </fieldset>
           </form>
         ';
