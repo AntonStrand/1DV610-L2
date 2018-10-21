@@ -26,7 +26,8 @@ class TodoFormController
                         false
                     )
                 );
-                // Make sure that the todo isn't save again on reload
+
+                // Make sure that the todo isn't saved again on reload
                 header("Location: ../index.php");
             } catch (\Exception $e) {
                 $this->todoForm->showErrorMessage();
