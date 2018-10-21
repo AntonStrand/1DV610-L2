@@ -45,7 +45,7 @@ class LayoutView
 
     private function renderLink(bool $isLoggedIn, \authentication\view\View $v): string
     {
-        return ($v instanceof LoginView)
+        return ($v instanceof \authentication\view\LoginView)
         ? ($isLoggedIn ? '' : '<a href=?' . self::$register . '>Register a new user</a>')
         : '<a href="?">Back to login</a>';
     }
