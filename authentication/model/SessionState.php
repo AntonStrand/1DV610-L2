@@ -7,7 +7,6 @@ class SessionState
     private $isAuthenticated;
     private $username;
 
-    // TODO: Use Username instead of string.
     public function __construct(string $username = null, bool $isAuth = false)
     {
         $this->username = $username;
