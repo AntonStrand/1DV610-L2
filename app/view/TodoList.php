@@ -28,7 +28,9 @@ class TodoList implements View
             return $response . '<b>You don\'t have any todos yet.</b></div>';
         }
 
-        foreach ($this->todoViews as $todo) {
+        $newestFirst = array_reverse($this->todoViews);
+
+        foreach ($newestFirst as $todo) {
             $response .= $todo->response();
         }
 
