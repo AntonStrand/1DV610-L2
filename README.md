@@ -8,11 +8,13 @@ It is a todo app and you can find it here: [1dv610.antonstrand.se](http://1dv610
 
 1. [UC1 Add a todo item](https://github.com/AntonStrand/1DV610-L2/wiki/UC1-Add-a-todo-item)
 2. [UC2 List todos](https://github.com/AntonStrand/1DV610-L2/wiki/UC2-Lista-todos)
+3. [UC3 Complete a todo](https://github.com/AntonStrand/1DV610-L2/wiki/UC3-Complete-a-todo)
 
 ### Test cases
 
-- [Test for Use case 1](https://github.com/AntonStrand/1DV610-L2/wiki/Test-case---UC1)
-- [Test for Use case 2](https://github.com/AntonStrand/1DV610-L2/wiki/Test-case---UC2)
+1. [Test for Use case 1](https://github.com/AntonStrand/1DV610-L2/wiki/Test-case---UC1)
+2. [Test for Use case 2](https://github.com/AntonStrand/1DV610-L2/wiki/Test-case---UC2)
+3. [Test for Use case 2](https://github.com/AntonStrand/1DV610-L2/wiki/Test-case---UC3)
 
 ## How to get started
 
@@ -20,7 +22,7 @@ This guide assumes that you know how to set up a php project and will only get i
 
 ### 1. Create database
 
-First, create a database and add a table for `users` and another for `cookies`.
+First, create a database and add a table for `users`, `cookies` and `todos`. You can use the SQL snippets below to speed up this process.
 
 #### SQL for creating `users` table
 
