@@ -29,7 +29,7 @@ class TodoDAL
         $this->db->disconnect();
     }
 
-    public function setToComplete(Todo $todo): void
+    public function saveAsCompleted(Todo $todo): void
     {
         $todo->setToComplete();
         $this->updateTodo($todo);

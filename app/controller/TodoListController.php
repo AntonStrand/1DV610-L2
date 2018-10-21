@@ -25,7 +25,7 @@ class TodoListController
     {
         if ($this->todoList->isATodoCompleted()) {
             $todo = $this->todoList->getCompletedTodo();
-            $todoDAL->setToComplete($todo);
+            $todoDAL->saveAsCompleted($todo);
         }
     }
 }
