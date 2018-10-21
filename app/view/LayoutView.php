@@ -53,7 +53,7 @@ class LayoutView
     private function renderMainPage(View $main = null): string
     {
         return ($main != null)
-        ? $main->response()
+        ? "<br>" . $main->response()
         : '';
 
     }
