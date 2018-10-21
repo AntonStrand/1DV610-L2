@@ -16,17 +16,21 @@ class AppController
         $auth = new \authentication\Authentication($db);
         $authView = $auth->getAuthenticationView($layoutView->wantsToRegister());
         $isAuth = $auth->isAuthenticated();
+        $todoList = new \app\view\TodoList();
+        $todoController = new \app\controller\TodoController($todoDAL, $todoForm, $todoList);
+        $todoPage = null;
 
         if ($isAuth) {
-            $usename = $auth->getUsername();
-            $todoFormController->handleTodoForm($todoDAL, $usename);
-            echo $todoForm->response();
+            $username = $auth->getUsername();
+            $todoController->handleUser($username);
+            $todoPage = new \app\view\TodoPage($todoForm, $todoList);
         }
 
         $layoutView->render(
             $isAuth,
             $authView,
-            $dateTimeView
+            $dateTimeView,
+            $todoPage
         );
     }
 }

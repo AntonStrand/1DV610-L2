@@ -6,7 +6,7 @@ class LayoutView
 {
     private static $register = 'register';
 
-    public function render($isLoggedIn, \authentication\view\View $v, DateTimeView $dtv)
+    public function render($isLoggedIn, \authentication\view\View $v, DateTimeView $dtv, View $mainPage = null)
     {
         echo '<!DOCTYPE html>
       <html>
@@ -21,7 +21,7 @@ class LayoutView
 
           <div class="container">
               ' . $v->response() . '
-
+              ' . $this->renderMainPage($mainPage) . '
               ' . $dtv->show() . '
           </div>
          </body>
@@ -34,7 +34,7 @@ class LayoutView
         return isset($_GET[self::$register]);
     }
 
-    private function renderIsLoggedIn($isLoggedIn)
+    private function renderIsLoggedIn(bool $isLoggedIn)
     {
         if ($isLoggedIn) {
             return '<h2>Logged in</h2>';
@@ -48,5 +48,13 @@ class LayoutView
         return ($v instanceof \authentication\view\LoginView)
         ? ($isLoggedIn ? '' : '<a href=?' . self::$register . '>Register a new user</a>')
         : '<a href="?">Back to login</a>';
+    }
+
+    private function renderMainPage(View $main = null): string
+    {
+        return ($main != null)
+        ? $main->response()
+        : '';
+
     }
 }

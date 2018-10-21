@@ -8,10 +8,13 @@ class TodoList implements View
 {
     private $todoViews;
 
-    public function __construct(array $todos)
+    public function __construct()
     {
         $this->todoViews = array();
+    }
 
+    public function addTodos(array $todos): void
+    {
         foreach ($todos as $todo) {
             $this->todoViews[] = new Todo($todo);
         }
